@@ -40,31 +40,34 @@ function Hint({ children }: { children: string }) {
 }
 
 type State = {
-  hasPermission: boolean
   isVisible: boolean
   url: null | string
 }
 
-const initialState: State = { isVisible: Platform.OS === 'ios', url: null }
+const initialState: State = {
+  isVisible: Platform.OS === 'ios',
+  url: null
+}
 
 type ScanProps = {
   navigation: StackNavigationProp<NavigationParams, 'Scan'>
 }
 
 export default function Scan({ navigation }: ScanProps) {
-  // const scheme = useColorScheme()
+  const scheme = useColorScheme()
   const [state, setState] = useReducer(
     (state: Partial<State>): State => ({ ...state }),
     initialState
   )
   const [scanned, setScanned] = useState(false)
+  const [hasPermission, setHasPermission] = useState(false)
   const [isLit, setLit] = useState(false)
   const { top, bottom } = useSafeAreaInsets()
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync()
-      setState({ hasPermission: status === 'granted', ...state })
+      setHasPermission(status === 'granted')
     }
 
     getBarCodeScannerPermissions()
@@ -76,12 +79,7 @@ export default function Scan({ navigation }: ScanProps) {
       setScanned(false)
     })
 
-    // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe
-  }, [navigation])
-
-  useEffect(() => {
-    setScanned(false)
   }, [navigation])
 
   const handleBarCodeScanned = ({ data: url }) => {
@@ -103,17 +101,43 @@ export default function Scan({ navigation }: ScanProps) {
     setLit((isLit) => !isLit)
   }, [])
 
-  if (state.hasPermission === null) {
+  if (hasPermission === null) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Requesting camera permission</Text>
+      <View
+        style={{
+          top: top / 2,
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+        <Text
+          style={{
+            textAlign: 'center',
+            paddingHorizontal: '10%',
+            color: scheme === 'dark' ? 'white' : 'black'
+          }}>
+          Requesting camera permission...
+        </Text>
       </View>
     )
   }
-  if (state.hasPermission === false) {
+  if (hasPermission === false) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>No access to camera</Text>
+      <View
+        style={{
+          top: top / 2,
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+        <Text
+          style={{
+            textAlign: 'center',
+            paddingHorizontal: '10%',
+            color: scheme === 'dark' ? 'white' : 'black'
+          }}>
+          To continue, you&apos;ll need to allow Camera access in Settings.
+        </Text>
       </View>
     )
   }
