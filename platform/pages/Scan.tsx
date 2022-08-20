@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useReducer, useState } from 'react'
-import { StyleSheet, Text, useColorScheme, View } from 'react-native'
+import { Platform, StyleSheet, Text, useColorScheme, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { BarCodeScanner } from 'expo-barcode-scanner'
 import { Camera, FlashMode } from 'expo-camera'
@@ -39,15 +39,15 @@ function Hint({ children }: { children: string }) {
   )
 }
 
-type State = {
-  isVisible: boolean
-  url: null | string
-}
+// type State = {
+//   // isVisible: boolean
+//   url: null | string
+// }
 
-const initialState: State = {
-  isVisible: Platform.OS === 'ios',
-  url: null
-}
+// const initialState: State = {
+//   // isVisible: Platform.OS === 'ios',
+//   url: null
+// }
 
 type ScanProps = {
   navigation: StackNavigationProp<NavigationParams, 'Scan'>
@@ -55,14 +55,17 @@ type ScanProps = {
 
 export default function Scan({ navigation }: ScanProps) {
   const scheme = useColorScheme()
-  const [state, setState] = useReducer(
-    (state: Partial<State>): State => ({ ...state }),
-    initialState
-  )
+  const [isVisible, setIsVisible] = useState(Platform.OS === 'ios')
   const [scanned, setScanned] = useState(false)
   const [hasPermission, setHasPermission] = useState(false)
   const [isLit, setLit] = useState(false)
   const { top, bottom } = useSafeAreaInsets()
+
+  if (!isVisible && !scanned) {
+    setTimeout(() => {
+      setIsVisible(true)
+    }, 100)
+  }
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -71,7 +74,6 @@ export default function Scan({ navigation }: ScanProps) {
     }
 
     getBarCodeScannerPermissions()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -82,9 +84,10 @@ export default function Scan({ navigation }: ScanProps) {
     return unsubscribe
   }, [navigation])
 
-  const handleBarCodeScanned = ({ data: url }) => {
+  const handleBarCodeScanned = ({ data: url }: { data: string }) => {
     setScanned(true)
-    setState({ isVisible: false, url })
+    setIsVisible(false)
+    // set url ({ url })
     alert(`Bar code with type ${url} has been scanned!`)
     navigation.navigate('EventPage', { name: 'My Awesome Event' })
   }
@@ -162,7 +165,7 @@ export default function Scan({ navigation }: ScanProps) {
           alignItems: 'center',
           width: '100%'
         }}>
-        {state.isVisible ? (
+        {isVisible ? (
           <Camera
             barCodeScannerSettings={{
               barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
@@ -173,6 +176,7 @@ export default function Scan({ navigation }: ScanProps) {
           />
         ) : null}
 
+        {/* {console.log(FlexAlignType)} */}
         <View
           style={[
             {
