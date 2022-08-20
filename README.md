@@ -28,5 +28,5 @@ Since we cannot afford to pay our tech overlords for signing/publishing certific
 1. Open a shell and point your working directory at "platform/".
 2. Run "npm install --global expo-cli".
 3. Run "npm install".
-4. Run "expo start".
+4. Run "npm run start".
 5. Follow the instructions to open a specific platform.
