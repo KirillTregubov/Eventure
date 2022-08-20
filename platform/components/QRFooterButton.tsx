@@ -16,12 +16,10 @@ const hitSlop = { top: slop, bottom: slop, right: slop, left: slop }
 export default function QRFooterButton({
   onPress,
   isActive = false,
-  action = '',
   iconSize = 28
 }: {
   onPress: () => void
   isActive?: boolean
-  action: 'flashlight' | 'close'
   iconSize?: number
 }) {
   const scheme = useColorScheme()
@@ -45,11 +43,7 @@ export default function QRFooterButton({
       onPressIn={onPressIn}
       onPress={onPressButton}>
       <BlurView intensity={intensity} style={styles.container} tint={tint}>
-        {action === 'flashlight' && (
-          <LightningBoltIcon size={iconSize} color={iconColor} />
-        )}
-        {action === 'close' && <XIcon size={iconSize} color={iconColor} />}
-        {/* <Ionicons name={iconName} size={iconSize} color={iconColor} /> */}
+        <LightningBoltIcon size={iconSize} color={iconColor} />
       </BlurView>
     </TouchableBounce>
   )

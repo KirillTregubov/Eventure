@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useReducer, useState } from 'react'
-import { Platform, StyleSheet, Text, useColorScheme, View } from 'react-native'
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
+  ViewStyle
+} from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { BarCodeScanner } from 'expo-barcode-scanner'
 import { Camera, FlashMode } from 'expo-camera'
@@ -39,16 +46,6 @@ function Hint({ children }: { children: string }) {
   )
 }
 
-// type State = {
-//   // isVisible: boolean
-//   url: null | string
-// }
-
-// const initialState: State = {
-//   // isVisible: Platform.OS === 'ios',
-//   url: null
-// }
-
 type ScanProps = {
   navigation: StackNavigationProp<NavigationParams, 'Scan'>
 }
@@ -85,10 +82,9 @@ export default function Scan({ navigation }: ScanProps) {
   }, [navigation])
 
   const handleBarCodeScanned = ({ data: url }: { data: string }) => {
+    console.log(url)
     setScanned(true)
     setIsVisible(false)
-    // set url ({ url })
-    alert(`Bar code with type ${url} has been scanned!`)
     navigation.navigate('EventPage', { name: 'My Awesome Event' })
   }
 
@@ -147,16 +143,6 @@ export default function Scan({ navigation }: ScanProps) {
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      {/* <Text style={{ color: scheme === 'dark' ? 'white' : 'black' }}>
-       
-      </Text>
-      <Button
-        title="Attend Event"
-        onPress={() =>
-          navigation.navigate('EventPage', {
-            name: 'My Awesome Event'
-          })
-        }></Button> */}
       <View
         style={{
           flex: 1,
@@ -176,23 +162,14 @@ export default function Scan({ navigation }: ScanProps) {
           />
         ) : null}
 
-        {/* {console.log(FlexAlignType)} */}
         <View
-          style={[
-            {
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              alignItems: 'space-between',
-              paddingHorizontal: '12%'
-            },
-            { top: 24 + top }
-          ]}>
-          <QRFooterButton
-            onPress={onFlashToggle}
-            action="flashlight"
-            isActive={isLit}
-          />
+          style={{
+            top: 24 + top,
+            position: 'absolute',
+            right: 0,
+            paddingHorizontal: '7%'
+          }}>
+          <QRFooterButton onPress={onFlashToggle} isActive={isLit} />
         </View>
 
         <QRIndicator />

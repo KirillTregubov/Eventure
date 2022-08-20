@@ -6,6 +6,12 @@ const cors = require("cors");
 const application = express();
 const port = 3000;
 
+require("dotenv").config();
+
+const mysql = require("mysql2");
+const connection = mysql.createConnection(process.env.DATABASE_URL);
+connection.end();
+
 const events = [
   {
     id: 1,
@@ -21,10 +27,14 @@ const users = [
   {
     id: 1,
     name: "User 1",
+    prizes: {},
+    organization: {},
   },
   {
     id: 2,
     name: "User 2",
+    prizes: {},
+    organization: {},
   },
 ];
 
@@ -34,6 +44,11 @@ const covid_alerts = [];
 const limits = [];
 const price = [];
 const address = [];
+const organizations_list = [];
+const organizations_by_id = [];
+const startDate = [];
+const endDate = [];
+
 application.use(cors());
 
 application.use(bodyParser.urlencoded({ extended: false }));
@@ -124,5 +139,15 @@ application.post("/create-event", (req, res) => {
 
   return;
 });
+
+application.post("/organizations_list", (req, res) => {});
+
+application.post("/organizations_by_id", (req, res) => {});
+
+application.post("/startDate", (req, res) => {});
+
+application.post("/endDate", (req, res) => {});
+
+application.post("/organizations_of_user_given_user_id", (req, res) => {});
 
 application.listen(port, () => console.log(`App listening on port ${port}!`)); // port 3000 in use
