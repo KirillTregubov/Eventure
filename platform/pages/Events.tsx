@@ -6,6 +6,7 @@ import {
   useColorScheme,
   View
 } from 'react-native'
+import { ChevronRightIcon } from 'react-native-heroicons/outline'
 
 import { NavigationParams } from '../lib/Navigation'
 
@@ -75,6 +76,8 @@ const HomeScreen = ({
     rsvpEvents: []
   }
 
+  const allEvents = []
+
   return (
     <ScrollView
       contentInsetAdjustmentBehavior={'automatic'}
@@ -85,8 +88,7 @@ const HomeScreen = ({
       }}>
       <View
         style={{
-          paddingVertical: 10,
-          paddingBottom: 24,
+          paddingVertical: 12,
           paddingHorizontal: 18
         }}>
         <View
@@ -113,7 +115,13 @@ const HomeScreen = ({
           </Text>
           <Text style={{ color: scheme === 'dark' ? '#a5b4fc' : '#3730a3' }}>
             You have {userData.availablePrizes.amount} prize available from{' '}
-            {userData.availablePrizes.organization}.
+            {userData.availablePrizes.organization}.{' '}
+            <View>
+              <ChevronRightIcon
+                size={12}
+                color={scheme === 'dark' ? '#a5b4fc' : '#3730a3'}
+              />
+            </View>
           </Text>
         </View>
       </View>
@@ -134,7 +142,7 @@ const HomeScreen = ({
           flexWrap: 'wrap',
           alignItems: 'flex-start',
           width: '100%',
-          paddingTop: 6,
+          paddingTop: 4,
           paddingHorizontal: 14,
           paddingBottom: 20
         }}>
@@ -159,7 +167,7 @@ const HomeScreen = ({
           flexWrap: 'wrap',
           alignItems: 'flex-start',
           width: '100%',
-          paddingTop: 6,
+          paddingTop: 4,
           paddingHorizontal: 14,
           paddingBottom: 20
         }}>

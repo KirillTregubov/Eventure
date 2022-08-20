@@ -1,4 +1,4 @@
-import { Button, Text, useColorScheme, View } from 'react-native'
+import { Button, Linking, Text, useColorScheme, View } from 'react-native'
 
 type EventPageParams = {
   route: {
@@ -11,6 +11,32 @@ type EventPageParams = {
 export default function EventPage({ route }: EventPageParams) {
   const scheme = useColorScheme()
 
+  // fetch
+  console.log(route.params.name)
+
+  const eventData = {
+    name: 'My Awesome Event',
+    pointsEarned: 20,
+    details: [
+      {
+        name: 'No Drinking Policy',
+        type: 'text',
+        content: 'No drinking on the premises.'
+      },
+      {
+        name: 'Interactive Map',
+        type: 'link',
+        content: 'https://google.com'
+      },
+      {
+        name: 'Our Website',
+        type: 'link',
+        content: 'https://google.com'
+      }
+    ],
+    address: '123 Main St, Anytown, CA 12345'
+  }
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text
@@ -19,13 +45,13 @@ export default function EventPage({ route }: EventPageParams) {
           paddingBottom: 2,
           color: scheme === 'dark' ? 'white' : 'black'
         }}>
-        Event: {route.params.name}
+        Event: {eventData.name}
       </Text>
       <Text style={{ color: scheme === 'dark' ? 'white' : 'black' }}>
         Welcome to the Event! Enjoy your time here!
       </Text>
       <Text style={{ color: scheme === 'dark' ? 'white' : 'black' }}>
-        Points Earned: 20
+        Points Earned: {eventData.pointsEarned}
       </Text>
       <Text
         style={{
@@ -34,8 +60,40 @@ export default function EventPage({ route }: EventPageParams) {
         }}>
         Info provided by event
       </Text>
-      <Button title="Interactive Map" />
-      <Button title="Our Website" />
+      {eventData.details.map((detail, index) => {
+        return (
+          <View key={index}>
+            {detail.type === 'text' && (
+              <>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    paddingTop: 12,
+                    color: scheme === 'dark' ? 'white' : 'black'
+                  }}>
+                  {detail.name}
+                </Text>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    paddingTop: 2,
+                    color: scheme === 'dark' ? 'white' : 'black'
+                  }}>
+                  {detail.content}
+                </Text>
+              </>
+            )}
+            {detail.type === 'link' && (
+              <Button
+                title={detail.name}
+                onPress={() => {
+                  Linking.openURL(detail.content)
+                }}
+              />
+            )}
+          </View>
+        )
+      })}
       <Text
         style={{
           paddingTop: 12,

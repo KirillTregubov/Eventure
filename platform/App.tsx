@@ -6,16 +6,9 @@ import {
   NavigationContainer
 } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import {
-  StackNavigationProp,
-  createStackNavigator
-} from '@react-navigation/stack'
+import { createStackNavigator } from '@react-navigation/stack'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import {
-  CogIcon,
-  QrcodeIcon,
-  UserCircleIcon
-} from 'react-native-heroicons/outline'
+import { QrcodeIcon, UserCircleIcon } from 'react-native-heroicons/outline'
 import { CalendarIcon } from 'react-native-heroicons/solid'
 
 import { NavigationParams } from './lib/Navigation'
@@ -23,7 +16,8 @@ import Main from './pages/Events'
 import SettingsScreen from './pages/Settings'
 import ScanScreen from './pages/Scan'
 import ProfileScreen from './pages/Profile'
-import EventScreen from './pages/EventPage'
+import EventPage from './pages/EventPage'
+import OrganizationPage from './pages/OrganizationPage'
 
 const MainStack = createNativeStackNavigator()
 function MainStackScreen() {
@@ -38,10 +32,6 @@ function MainStackScreen() {
 }
 
 const Tab = createBottomTabNavigator<NavigationParams>()
-
-// type PlatformProps = {
-//   navigation: StackNavigationProp<NavigationParams, 'Platform'>
-// }
 
 function PlatformPage() {
   return (
@@ -81,6 +71,7 @@ function PlatformPage() {
         name="Profile"
         component={ProfileScreen}
         options={{
+          headerTitle: 'My Profile',
           headerShown: true,
           tabBarIcon: ({ color, size }) => (
             <UserCircleIcon color={color} size={size} />
@@ -113,7 +104,12 @@ export default function App() {
           <Stack.Screen name="Settings" component={SettingsScreen} />
           <Stack.Screen
             name="EventPage"
-            component={EventScreen}
+            component={EventPage}
+            options={({ route }) => ({ title: route.params.name })}
+          />
+          <Stack.Screen
+            name="OrganizationPage"
+            component={OrganizationPage}
             options={({ route }) => ({ title: route.params.name })}
           />
         </Stack.Navigator>
