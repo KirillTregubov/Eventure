@@ -5,7 +5,7 @@ This is a submission to [Hack the 6ix 2022](https://hackthe6ix2022.devpost.com/)
 ## How to use the app
 Since we cannot afford to pay our tech overlords for signing/publishing certificates, you can use our application by:
 1. Installing the [Expo Go](https://expo.dev/client) app.
-2. On Android, there is a “Scan QR Code” button. On iOS, use your System Camera. Scan the QR code below:
+2. On Android, there is a “Scan QR Code” button. On iOS, use your System Camera. Scan the QR code below.
     - Alternatively, you can follow the instructions on https://expo.dev/@h6team/hackthe6ix
   <div align="center">
     <img style='width: 30%' src="images/expo-go.svg" alt="QR Code"></img>
