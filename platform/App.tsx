@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar'
-import { useColorScheme, View } from 'react-native'
+import { Platform, useColorScheme, View } from 'react-native'
 import {
   DarkTheme,
   DefaultTheme,
@@ -39,16 +39,17 @@ function MainStackScreen() {
 
 const Tab = createBottomTabNavigator<NavigationParams>()
 
-type PlatformProps = {
-  navigation: StackNavigationProp<NavigationParams, 'Platform'>
-}
+// type PlatformProps = {
+//   navigation: StackNavigationProp<NavigationParams, 'Platform'>
+// }
 
-function Platform({ navigation }: PlatformProps) {
+function PlatformPage() {
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#6366f1'
+        tabBarActiveTintColor: '#6366f1',
+        tabBarStyle: Platform.OS === 'android' ? { paddingBottom: 6 } : {}
       }}>
       <Tab.Screen
         name="Main"
@@ -56,19 +57,7 @@ function Platform({ navigation }: PlatformProps) {
         options={{
           tabBarIcon: ({ color, size }) => (
             <CalendarIcon color={color} size={size} />
-          ),
-          headerRight: () => {
-            return (
-              <CogIcon
-                size={24}
-                onPress={() => navigation.navigate('Settings')}
-              />
-            )
-          },
-          headerRightContainerStyle: {
-            paddingRight: 10,
-            marginLeft: -10
-          }
+          )
         }}
       />
       <Tab.Screen
@@ -81,9 +70,9 @@ function Platform({ navigation }: PlatformProps) {
               style={{
                 borderRadius: 999,
                 backgroundColor: focused ? '#4338ca' : '#6366f1',
-                padding: 18
+                padding: 15
               }}>
-              <QrcodeIcon color="#eef2ff" size={size} />
+              <QrcodeIcon color="#eef2ff" size={size + 6} />
             </View>
           )
         }}
@@ -95,18 +84,7 @@ function Platform({ navigation }: PlatformProps) {
           headerShown: true,
           tabBarIcon: ({ color, size }) => (
             <UserCircleIcon color={color} size={size} />
-          ),
-          headerRight: () => (
-            <CogIcon
-              size={24}
-              onPress={() => navigation.navigate('Settings')}
-            />
-          ),
-          headerRightContainerStyle: {
-            width: '100%',
-            paddingRight: 10,
-            marginLeft: -10
-          }
+          )
         }}
       />
     </Tab.Navigator>
@@ -127,7 +105,7 @@ export default function App() {
           }}>
           <Stack.Screen
             name="Platform"
-            component={Platform}
+            component={PlatformPage}
             options={{
               headerShown: false
             }}

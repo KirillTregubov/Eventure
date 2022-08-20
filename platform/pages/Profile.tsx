@@ -1,20 +1,35 @@
+import { StackNavigationProp } from '@react-navigation/stack'
 import { useLayoutEffect } from 'react'
-import { Button, Text, useColorScheme, View } from 'react-native'
+import { Button, Platform, Text, useColorScheme, View } from 'react-native'
+import { CogIcon } from 'react-native-heroicons/outline'
 
 import { NavigationParams } from '../lib/Navigation'
 
-export default function Profile({ navigation }: NavigationParams) {
+type ProfileProps = {
+  navigation: StackNavigationProp<NavigationParams, 'Profile'>
+}
+
+export default function Profile({ navigation }: ProfileProps) {
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <Button
-          onPress={() => alert('This is a button!')}
-          title="Info"
-          color="#fff"
-        />
-      )
+      headerRight: () => {
+        return Platform.OS === 'android' ? (
+          <Button
+            onPress={() => navigation.navigate('Settings')}
+            title="Settings"
+            color="#6366f1"
+          />
+        ) : (
+          <CogIcon size={24} onPress={() => navigation.navigate('Settings')} />
+        )
+      },
+      headerRightContainerStyle: {
+        width: '100%',
+        paddingRight: 10,
+        marginLeft: -10
+      }
     })
-  }, [])
+  })
 
   const scheme = useColorScheme()
 
