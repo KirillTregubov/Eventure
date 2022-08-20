@@ -3,6 +3,13 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
+const { Sequelize } = require("sequelize");
+
+const sequelize = new Sequelize("database", "username", "password", {
+  host: "localhost",
+  dialect: "mysql",
+});
+
 const application = express();
 const port = 3000;
 
@@ -10,16 +17,22 @@ require("dotenv").config();
 
 const mysql = require("mysql2");
 const connection = mysql.createConnection(process.env.DATABASE_URL);
-connection.end();
+
+//creating the users table:
+const User = sequelize.define("User", {});
 
 const events = [
   {
-    id: 1,
+    eventId: 1,
     name: "Event 1",
+    startDate: {},
+    endDate: {},
   },
   {
-    id: 2,
+    eventId: 2,
     name: "Event 2",
+    startDate: {},
+    endDate: {},
   },
 ];
 
@@ -44,8 +57,11 @@ const covid_alerts = [];
 const limits = [];
 const price = [];
 const address = [];
-const organizations_list = [];
-const organizations_by_id = [];
+const organizations_list = [
+  {
+    name: {},
+  },
+];
 const startDate = [];
 const endDate = [];
 
@@ -54,31 +70,27 @@ application.use(cors());
 application.use(bodyParser.urlencoded({ extended: false }));
 application.use(bodyParser.json());
 
-application.post("/event", (req, res) => {
-  // - check all params exist, return and provide error if not
-  const eventId = req.body.eventId;
-  if (!eventId) {
-    res.status(400).send("eventId is required");
-    return;
-  }
+//what is post request doing? pls comment ffs lmao
 
-  // - query data
-  const event = events.find((event) => {
-    return event.id == eventId;
-  });
-  // const event = events.find((event) => event.id == eventId);
+// application.post("/event", (req, res) => {
+//   const eventId = req.body.eventId;
+//   if (!eventId) {
+//     res.status(400).send("eventId is required");
+//     return;
+//   }
 
-  // - check if data is of expected shape and return, provide error and return otherwise
-  if (!event) {
-    res.send({
-      message: "Event not found",
-    });
-    return;
-  }
+//   const event = events.find((event) => event.id == eventId);
 
-  res.send({ data: event });
-  return;
-});
+//   if (!event) {
+//     res.send({
+//       message: "Event not found",
+//     });
+//     return;
+//   }
+
+//   res.send({ data: event });
+//   return;
+// });
 
 application.post("/user", () => {
   // Check if user is authed
@@ -88,13 +100,8 @@ application.post("/user", () => {
     return;
   }
 
-  // - query data
-  const user = users.find((user) => {
-    return user.id == userId;
-  });
-  // const event = events.find((event) => event.id == eventId);
+  const user = users.find((user) => user.userId == userId);
 
-  // - check if data is of expected shape and return, provide error and return otherwise
   if (!user) {
     res.send({
       message: "User not found",
@@ -111,43 +118,111 @@ application.get("/", (req, res) => {
 });
 
 application.get("/events", (req, res) => {
+  //retrieves event specific info
+
+  //first retrive all events form the
   res.send({ data: events });
   // res.send(points_earned);
   // res.send(people_amount);
   // res.send(people_amount);
 });
 
+application.get("/get-event", (req, res) => {
+  // Returning _____ based on userId and eventId
+  const userId = res.body.userId;
+  const eventId = res.body.eventId;
+
+  if (!userId || !eventId) {
+    res.status(400).send("enter all the required fields");
+    return;
+  }
+
+  const user = users.find((user) => user.id == userId);
+  const event = events.find((event) => event.id == eventId);
+
+  const sendBack = [{}];
+
+  res.send({ data: events });
+});
+
 application.post("/create-event", (req, res) => {
-  const limit = req.body.limit;
-  const price = req.body.price;
-  const address = req.body.address;
+  //creating an event
 
-  if (!limit) {
-    res.status(400).send("Limit is required");
-    return;
-  }
+  //CAN WE MAKE THIS RETURN A QR CODE THAT GIVES EVENT INFO?
+  // NO, YOU SEND A URL AND THE FRONTEND GENERATES THE QR CODE
 
-  if (!price) {
-    res.status(400).send("Price is required");
-    return;
-  }
+  //event should have:
+  //eventID, eventName, organizerID, platformType, desc, currAttendees, maxBookings, regPrice, unregUsers, startDate, startTime, duration
 
-  if (!address) {
-    res.status(400).send("Address is required");
-    return;
+  const eventID = res.body.eventID;
+  const organizerID = res.body.organizerID;
+  const platformType = res.body.platformType;
+  const desc = res.body.desc;
+  const currAttendees = res.body.currAttendees;
+  const maxBookings = res.body.maxBookings;
+  const regPrice = res.body.regPrice;
+  const unregUsers = res.body.unregUsers; //should be default to false
+  const startDate = res.body.startDate;
+  const startTime = res.body.startTime;
+  const duration = res.body.duration;
+
+  if (
+    !eventID ||
+    !organizerID ||
+    !platformType ||
+    !desc ||
+    !currAttendees ||
+    !maxBookings ||
+    !regPrice ||
+    !startDate ||
+    !startTime ||
+    !duration
+  ) {
+    return res.status(400).json({
+      error: "enter all the required fields",
+    });
   }
+  // const limit = req.body.limit;
+  // const price = req.body.price;
+  // const address = req.body.address;
+
+  // if (!limit) {
+  //   res.status(400).send("Limit is required");
+  //   return;
+  // }
+
+  // if (!price) {
+  //   res.status(400).send("Price is required");
+  //   return;
+  // }
+
+  // if (!address) {
+  //   res.status(400).send("Address is required");
+  //   return;
+  // }
+
+  //put it into the database here:
+
+  res.status(200).send({
+    message: "event created",
+    data: "event_data", //replace this with data about the event
+  });
 
   return;
 });
 
-application.post("/organizations_list", (req, res) => {});
+application.post("/organizations", (req, res) => {
+  const userId = req.body.userId;
 
-application.post("/organizations_by_id", (req, res) => {});
+  res.status(200).send({
+    data: organizations,
+  });
 
-application.post("/startDate", (req, res) => {});
+  const organization = organizations.find(
+    (organization) => organization.id == userId
+  );
+});
 
-application.post("/endDate", (req, res) => {});
-
-application.post("/organizations_of_user_given_user_id", (req, res) => {});
+connection.end();
 
 application.listen(port, () => console.log(`App listening on port ${port}!`)); // port 3000 in use
