@@ -57,12 +57,14 @@ function Platform({ navigation }: PlatformProps) {
           tabBarIcon: ({ color, size }) => (
             <CalendarIcon color={color} size={size} />
           ),
-          headerRight: () => (
-            <CogIcon
-              size={24}
-              onPress={() => navigation.navigate('Settings')}
-            />
-          ),
+          headerRight: () => {
+            return (
+              <CogIcon
+                size={24}
+                onPress={() => navigation.navigate('Settings')}
+              />
+            )
+          },
           headerRightContainerStyle: {
             paddingRight: 10,
             marginLeft: -10
