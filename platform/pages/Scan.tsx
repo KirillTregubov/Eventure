@@ -1,6 +1,13 @@
 import { Button, Text, useColorScheme, View } from 'react-native'
+import { StackNavigationProp } from '@react-navigation/stack'
 
-export default function Scan({ navigation }) {
+import { NavigationParams } from '../lib/Navigation'
+
+type ScanProps = {
+  navigation: StackNavigationProp<NavigationParams, 'Scan'>
+}
+
+export default function Scan({ navigation }: ScanProps) {
   const scheme = useColorScheme()
 
   return (

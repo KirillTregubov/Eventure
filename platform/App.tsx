@@ -6,7 +6,10 @@ import {
   NavigationContainer
 } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { createStackNavigator } from '@react-navigation/stack'
+import {
+  StackNavigationProp,
+  createStackNavigator
+} from '@react-navigation/stack'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import {
   CogIcon,
@@ -15,6 +18,7 @@ import {
 } from 'react-native-heroicons/outline'
 import { CalendarIcon } from 'react-native-heroicons/solid'
 
+import { NavigationParams } from './lib/Navigation'
 import Main from './pages/Events'
 import SettingsScreen from './pages/Settings'
 import ScanScreen from './pages/Scan'
@@ -33,7 +37,13 @@ function MainStackScreen() {
   )
 }
 
-function Platform({ navigation }) {
+const Tab = createBottomTabNavigator<NavigationParams>()
+
+type PlatformProps = {
+  navigation: StackNavigationProp<NavigationParams, 'Platform'>
+}
+
+function Platform({ navigation }: PlatformProps) {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -101,22 +111,18 @@ function Platform({ navigation }) {
   )
 }
 
-const Stack = createStackNavigator()
-const Tab = createBottomTabNavigator()
+const Stack = createStackNavigator<NavigationParams>()
 
 export default function App() {
   const scheme = useColorScheme()
 
   return (
     <>
-      <NavigationContainer
-        theme={scheme === 'dark' ? DarkTheme : DefaultTheme}
-        style={{ overflow: 'hidden' }}>
+      <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack.Navigator
           screenOptions={{
             headerBackTitle: 'Back'
-          }}
-          style={{ color: 'white' }}>
+          }}>
           <Stack.Screen
             name="Platform"
             component={Platform}

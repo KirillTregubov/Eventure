@@ -1,6 +1,14 @@
 import { Button, Text, useColorScheme, View } from 'react-native'
 
-export default function EventPage({ route }) {
+type EventPageParams = {
+  route: {
+    params: {
+      name: string
+    }
+  }
+}
+
+export default function EventPage({ route }: EventPageParams) {
   const scheme = useColorScheme()
 
   return (
