@@ -1,6 +1,21 @@
-import { Text, useColorScheme, View } from 'react-native'
+import { useLayoutEffect } from 'react'
+import { Button, Text, useColorScheme, View } from 'react-native'
 
-export default function Profile() {
+import { NavigationParams } from '../lib/Navigation'
+
+export default function Profile({ navigation }: NavigationParams) {
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button
+          onPress={() => alert('This is a button!')}
+          title="Info"
+          color="#fff"
+        />
+      )
+    })
+  }, [])
+
   const scheme = useColorScheme()
 
   return (
