@@ -1,50 +1,45 @@
-import { StatusBar } from "expo-status-bar";
-import { Button, StyleSheet, useColorScheme, View } from "react-native";
+import { StatusBar } from 'expo-status-bar'
+import { useColorScheme, View } from 'react-native'
 import {
   DarkTheme,
   DefaultTheme,
-  NavigationContainer,
-} from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+  NavigationContainer
+} from '@react-navigation/native'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { createStackNavigator } from '@react-navigation/stack'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import {
   CogIcon,
-  HomeIcon,
   QrcodeIcon,
-  UserCircleIcon,
-} from "react-native-heroicons/outline";
-import { CalendarIcon } from "react-native-heroicons/solid";
+  UserCircleIcon
+} from 'react-native-heroicons/outline'
+import { CalendarIcon } from 'react-native-heroicons/solid'
 
-import Main from "./pages/Events";
-import SettingsScreen from "./pages/Settings";
-import ScanScreen from "./pages/Scan";
-import ProfileScreen from "./pages/Profile";
-import EventScreen from "./pages/EventPage";
+import Main from './pages/Events'
+import SettingsScreen from './pages/Settings'
+import ScanScreen from './pages/Scan'
+import ProfileScreen from './pages/Profile'
+import EventScreen from './pages/EventPage'
 
-const MainStack = createNativeStackNavigator();
+const MainStack = createNativeStackNavigator()
 function MainStackScreen() {
   return (
     <MainStack.Navigator
       screenOptions={{
-        headerLargeTitle: true,
-      }}
-    >
+        headerLargeTitle: true
+      }}>
       <MainStack.Screen name="Events" component={Main} />
     </MainStack.Navigator>
-  );
+  )
 }
 
 function Platform({ navigation }) {
-  const scheme = useColorScheme();
-
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#6366f1",
-      }}
-    >
+        tabBarActiveTintColor: '#6366f1'
+      }}>
       <Tab.Screen
         name="Main"
         component={MainStackScreen}
@@ -55,31 +50,30 @@ function Platform({ navigation }) {
           headerRight: () => (
             <CogIcon
               size={24}
-              onPress={() => navigation.navigate("Settings")}
+              onPress={() => navigation.navigate('Settings')}
             />
           ),
           headerRightContainerStyle: {
             paddingRight: 10,
-            marginLeft: -10,
-          },
+            marginLeft: -10
+          }
         }}
       />
       <Tab.Screen
         name="Scan"
         component={ScanScreen}
         options={{
-          title: "",
-          tabBarIcon: ({ focused, color, size }) => (
+          title: '',
+          tabBarIcon: ({ focused, size }) => (
             <View
               style={{
                 borderRadius: 999,
-                backgroundColor: focused ? "#4338ca" : "#6366f1",
-                padding: 18,
-              }}
-            >
+                backgroundColor: focused ? '#4338ca' : '#6366f1',
+                padding: 18
+              }}>
               <QrcodeIcon color="#eef2ff" size={size} />
             </View>
-          ),
+          )
         }}
       />
       <Tab.Screen
@@ -87,49 +81,47 @@ function Platform({ navigation }) {
         component={ProfileScreen}
         options={{
           headerShown: true,
-          tabBarIcon: ({ focused, color, size }) => (
+          tabBarIcon: ({ color, size }) => (
             <UserCircleIcon color={color} size={size} />
           ),
           headerRight: () => (
             <CogIcon
               size={24}
-              onPress={() => navigation.navigate("Settings")}
+              onPress={() => navigation.navigate('Settings')}
             />
           ),
           headerRightContainerStyle: {
-            width: "100%",
+            width: '100%',
             paddingRight: 10,
-            marginLeft: -10,
-          },
+            marginLeft: -10
+          }
         }}
       />
     </Tab.Navigator>
-  );
+  )
 }
 
-const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator()
+const Tab = createBottomTabNavigator()
 
 export default function App() {
-  const scheme = useColorScheme();
+  const scheme = useColorScheme()
 
   return (
     <>
       <NavigationContainer
-        theme={scheme === "dark" ? DarkTheme : DefaultTheme}
-        style={{ overflow: "hidden" }}
-      >
+        theme={scheme === 'dark' ? DarkTheme : DefaultTheme}
+        style={{ overflow: 'hidden' }}>
         <Stack.Navigator
           screenOptions={{
-            headerBackTitle: "Back",
+            headerBackTitle: 'Back'
           }}
-          style={{ color: "white" }}
-        >
+          style={{ color: 'white' }}>
           <Stack.Screen
             name="Platform"
             component={Platform}
             options={{
-              headerShown: false,
+              headerShown: false
             }}
           />
           <Stack.Screen name="Settings" component={SettingsScreen} />
@@ -143,5 +135,5 @@ export default function App() {
 
       <StatusBar style="auto" />
     </>
-  );
+  )
 }
