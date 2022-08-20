@@ -6,31 +6,123 @@ const cors = require("cors");
 const application = express();
 const port = 3000;
 
-const books = [];
+const events = [
+  {
+    id: 1,
+    name: "Event 1",
+  },
+  {
+    id: 2,
+    name: "Event 2",
+  },
+];
+
+const users = [
+  {
+    id: 1,
+    name: "User 1",
+  },
+  {
+    id: 2,
+    name: "User 2",
+  },
+];
+
+const people_amount = [];
+const points_earned = [];
+const covid_alerts = [];
+const limits = [];
+const price = [];
+const address = [];
 application.use(cors());
 
 application.use(bodyParser.urlencoded({ extended: false }));
 application.use(bodyParser.json());
 
-application.post("/book", (req, res) => {
-  // Will be coding here
+application.post("/event", (req, res) => {
+  // - check all params exist, return and provide error if not
+  const eventId = req.body.eventId;
+  if (!eventId) {
+    res.status(400).send("eventId is required");
+    return;
+  }
 
-  const book = req.body;
-  console.log(req.body);
-  books.push(book);
+  // - query data
+  const event = events.find((event) => {
+    return event.id == eventId;
+  });
+  // const event = events.find((event) => event.id == eventId);
 
-  res.send("Book is added to the database");
+  // - check if data is of expected shape and return, provide error and return otherwise
+  if (!event) {
+    res.send({
+      message: "Event not found",
+    });
+    return;
+  }
+
+  res.send({ data: event });
+  return;
+});
+
+application.post("/user", () => {
+  // Check if user is authed
+  const userId = req.body.userId;
+  if (!userId) {
+    res.status(400).send("userId is required");
+    return;
+  }
+
+  // - query data
+  const user = users.find((user) => {
+    return user.id == userId;
+  });
+  // const event = events.find((event) => event.id == eventId);
+
+  // - check if data is of expected shape and return, provide error and return otherwise
+  if (!user) {
+    res.send({
+      message: "User not found",
+    });
+    return;
+  }
+
+  res.send({ data: user });
+  return;
 });
 
 application.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-application.get("/books", (req, res) => {
-  res.json(books);
+application.get("/events", (req, res) => {
+  res.send({ data: events });
+  // res.send(points_earned);
+  // res.send(people_amount);
+  // res.send(people_amount);
 });
-//configured routes:
 
-// application.get()
+application.post("/create-event", (req, res) => {
+  const limit = req.body.limit;
+  const price = req.body.price;
+  const address = req.body.address;
+
+  if (!limit) {
+    res.status(400).send("Limit is required");
+    return;
+  }
+
+  if (!price) {
+    res.status(400).send("Price is required");
+    return;
+  }
+
+  if (!address) {
+    res.status(400).send("Address is required");
+    return;
+  }
+
+  return;
+});
 
 application.listen(port, () => console.log(`App listening on port ${port}!`)); // port 3000 in use
