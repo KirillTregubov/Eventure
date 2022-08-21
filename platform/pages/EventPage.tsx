@@ -1,5 +1,6 @@
 import { Button, Linking, Text, useColorScheme, View } from 'react-native'
 import { CalendarIcon, ClockIcon } from 'react-native-heroicons/outline'
+import MapView, { Marker } from 'react-native-maps'
 import Styles from '../lib/Styles'
 
 type EventPageParams = {
@@ -18,6 +19,8 @@ export default function EventPage({ route }: EventPageParams) {
 
   const eventData = {
     name: 'My Awesome Event',
+    greeting:
+      'Welcome to the concert! The artist has a meet-and-greet after the show!',
     pointsEarned: 20,
     startDate: '25',
     endDate: '27 July, 2022',
@@ -40,22 +43,31 @@ export default function EventPage({ route }: EventPageParams) {
         content: 'https://google.com'
       }
     ],
-    address: '123 Main St, Anytown, CA 12345'
+    address: {
+      latitude: 37.78825,
+      longitude: -122.4324
+    }
   }
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View
+      style={{
+        paddingTop: Styles.paddingTop.container,
+        paddingHorizontal: Styles.paddingHorizontal.container
+      }}>
       <Text
         style={{
-          fontSize: 18,
+          fontWeight: '700',
+          fontSize: 22,
           paddingBottom: 2,
           color: scheme === 'dark' ? 'white' : 'black'
         }}>
-        Event: {eventData.name}
+        {eventData.name}
       </Text>
       <View
         style={{
-          marginTop: 12,
+          marginVertical: 12,
+          marginBottom: 8,
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center'
@@ -83,7 +95,7 @@ export default function EventPage({ route }: EventPageParams) {
                   ? Styles.colors.neutral['400']
                   : Styles.colors.neutral['500']
             }}>
-            {organizationData.startDate} - {organizationData.endDate}
+            {eventData.startDate} - {eventData.endDate}
           </Text>
         </View>
         <View
@@ -109,15 +121,36 @@ export default function EventPage({ route }: EventPageParams) {
                   ? Styles.colors.neutral['400']
                   : Styles.colors.neutral['500']
             }}>
-            {organizationData.startTime} - {organizationData.endTime}
+            {eventData.startTime} - {eventData.endTime}
           </Text>
         </View>
       </View>
-      <Text style={{ color: scheme === 'dark' ? 'white' : 'black' }}>
-        Welcome to the Event! Enjoy your time here!
+
+      <Text
+        style={{
+          // marginTop: 'auto',
+          marginBottom: 12,
+          fontWeight: '500',
+          color:
+            scheme === 'dark'
+              ? Styles.colors.neutral['400']
+              : Styles.colors.neutral['500']
+          // consider using 'white' with image
+        }}>
+        <Text
+          style={{
+            fontWeight: '800',
+            color:
+              scheme === 'dark'
+                ? Styles.colors.neutral['300']
+                : Styles.colors.neutral['600']
+          }}>
+          {eventData.pointsEarned}
+        </Text>{' '}
+        points earned
       </Text>
       <Text style={{ color: scheme === 'dark' ? 'white' : 'black' }}>
-        Points Earned: {eventData.pointsEarned}
+        Welcome to the Event! Enjoy your time here!
       </Text>
       <Text
         style={{
@@ -167,15 +200,25 @@ export default function EventPage({ route }: EventPageParams) {
         }}>
         Map of Venue
       </Text>
-      <View
+      <MapView
+        region={{
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+          ...eventData.address
+        }}
         style={{
           backgroundColor: scheme === 'dark' ? '#262626' : '#d4d4d4',
-          width: '80%',
-          height: 200,
+          width: '100%',
+          height: 250,
           borderRadius: 8,
           marginTop: 8
-        }}
-      />
+        }}>
+        <Marker
+          coordinate={eventData.address}
+          title={'Event Location'}
+          description={`Location of ${eventData.name}`}
+        />
+      </MapView>
     </View>
   )
 }

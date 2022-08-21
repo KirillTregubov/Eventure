@@ -1,74 +1,11 @@
 import { StackNavigationProp } from '@react-navigation/stack'
-import {
-  ScrollView,
-  Text,
-  TouchableHighlight,
-  useColorScheme,
-  View
-} from 'react-native'
+import { ScrollView, Text, useColorScheme, View } from 'react-native'
 import { ChevronRightIcon } from 'react-native-heroicons/outline'
 
 import { NavigationParams } from '../lib/Navigation'
 import Styles from '../lib/Styles'
-
-function EventCard({
-  navigation
-}: {
-  navigation: StackNavigationProp<NavigationParams>
-}): JSX.Element {
-  const scheme = useColorScheme()
-
-  return (
-    <View
-      style={{
-        width: '50%',
-        height: 120,
-        padding: 4
-      }}>
-      <TouchableHighlight
-        onPress={() =>
-          navigation.navigate('EventPage', { name: 'My Awesome Event' })
-        }
-        underlayColor={
-          scheme === 'dark'
-            ? Styles.colors.neutral['600']
-            : Styles.colors.neutral['500']
-        }
-        style={{
-          backgroundColor:
-            scheme === 'dark'
-              ? Styles.colors.neutral['800']
-              : Styles.colors.neutral['200'],
-          width: '100%',
-          height: '100%',
-          borderRadius: 8,
-          padding: 6,
-          paddingHorizontal: 8,
-          elevation: 3
-        }}>
-        <View style={{ flex: 1 }}>
-          <Text
-            style={{
-              fontSize: 12,
-              marginTop: 'auto',
-              color: scheme === 'dark' ? '#737373' : 'black'
-            }}>
-            25 - 27 July, 2022
-          </Text>
-          <Text
-            style={{
-              fontSize: 15,
-              fontWeight: '900',
-              color: scheme === 'dark' ? 'white' : 'black'
-              // consider using 'white' with image
-            }}>
-            Event Name
-          </Text>
-        </View>
-      </TouchableHighlight>
-    </View>
-  )
-}
+import EventCard from '../components/EventCard'
+import { SampleEvent } from '../lib/Data'
 
 const HomeScreen = ({
   navigation
@@ -86,7 +23,39 @@ const HomeScreen = ({
     rsvpEvents: []
   }
 
-  const allEvents = []
+  const allEvents = [
+    {
+      name: 'My Awesome Event',
+      greeting:
+        'Welcome to the concert! The artist has a meet-and-greet after the show!',
+      pointsEarned: 20,
+      startDate: '25',
+      endDate: '27 July, 2022',
+      startTime: '1:00 p.m.',
+      endTime: '7:00 p.m.',
+      details: [
+        {
+          name: 'No Drinking Policy',
+          type: 'text',
+          content: 'No drinking on the premises.'
+        },
+        {
+          name: 'Interactive Map',
+          type: 'link',
+          content: 'https://google.com'
+        },
+        {
+          name: 'Our Website',
+          type: 'link',
+          content: 'https://google.com'
+        }
+      ],
+      address: {
+        latitude: 37.78825,
+        longitude: -122.4324
+      }
+    }
+  ]
 
   return (
     <ScrollView
@@ -179,7 +148,7 @@ const HomeScreen = ({
           paddingBottom: 20
         }}>
         {[...Array(2)].map((e, i) => (
-          <EventCard navigation={navigation} key={i} />
+          <EventCard navigation={navigation} event={SampleEvent} key={i} />
         ))}
       </View>
       <View style={{ paddingHorizontal: 18 }}>
@@ -203,8 +172,8 @@ const HomeScreen = ({
           paddingHorizontal: 14,
           paddingBottom: 20
         }}>
-        {[...Array(20)].map((e, i) => (
-          <EventCard navigation={navigation} key={i} />
+        {allEvents.map((event, index) => (
+          <EventCard navigation={navigation} event={event} key={index} />
         ))}
       </View>
     </ScrollView>
