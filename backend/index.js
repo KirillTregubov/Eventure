@@ -361,11 +361,11 @@ application.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-application.get("/events", (req, res) => {
-  //words
+application.get("/events", async (req, res) => {
+  //WORKS
 
   //retrieves event specific info
-  const Events = Event.findAll();
+  const Events = await Event.findAll();
 
   //first retrive all events form the
   res.send({ data: Events });
@@ -374,7 +374,7 @@ application.get("/events", (req, res) => {
   // res.send(people_amount);
 });
 
-application.post("/get-event", (req, res) => {
+application.post("/get-event", async (req, res) => {
   const eventID = req.body.eventId;
 
   if (!eventID) {
@@ -382,9 +382,9 @@ application.post("/get-event", (req, res) => {
     return;
   }
 
-  const event = Event.findOne({
+  const event = await Event.findOne({
     where: {
-      eventId: eventID,
+      id: eventID,
     },
   });
 
@@ -399,7 +399,7 @@ application.post("/get-event", (req, res) => {
 });
 
 application.post("/create-organization", async (req, res) => {
-  //creating an organization
+  //WORKS
   // const userId = req.body.userId;
   // const organizationName = req.body.organizationName;
 
@@ -429,7 +429,7 @@ application.post("/create-organization", async (req, res) => {
 });
 
 application.post("/create-event", async (req, res) => {
-  console.log('hi');
+  //WORKS
   //creating an event
 
   //CAN WE MAKE THIS RETURN A QR CODE THAT GIVES EVENT INFO?
@@ -439,7 +439,6 @@ application.post("/create-event", async (req, res) => {
   //eventID, eventName, organizerID, platformType, desc, currAttendees, maxBookings, regPrice, unregUsers, startDate, startTime, duration
 
   // const eventID = res.body.eventID;
-  console.log(req);
 
   const organizationName = req.body.organizationName;
   const desc = req.body.desc;
@@ -463,7 +462,6 @@ application.post("/create-event", async (req, res) => {
     !category ||
     !regPrice ||
     !startDate ||
-    !startTime ||
     !pointsEarned
   ) {
     return res.status(400).json({
@@ -524,9 +522,9 @@ application.post("/delete-organization", async (req, res) => {
   await organization.destroy();
 });
 
-application.post("/test-post-req", async (req, res) => {
-  console.log(req)
-})
+// application.post("/test-post-req", async (req, res) => {
+//   console.log(req)
+// })
 
 // connection.end();
 
