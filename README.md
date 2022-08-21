@@ -5,7 +5,7 @@
   <h3 align="center">Eventure</h3>
 
   <p align="center">
-    A next-generation Event Platform. Submitted to [Hack the 6ix 2022](https://hackthe6ix2022.devpost.com/).
+    A next-generation Event Platform. Submitted to <a href="https://hackthe6ix2022.devpost.com/">Hack the 6ix 2022</a>.
     <br />
     <a href="https://github.com/KirillTregubov/hackthe6ix/issues">Report a Bug</a>
   </p>
