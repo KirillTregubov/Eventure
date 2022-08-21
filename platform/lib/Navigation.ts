@@ -3,8 +3,7 @@ export type NavigationParams = {
   Settings: undefined
   EventPage: { name: string }
   OrganizationPage: { name: string }
-  CreateEvent: { name: string }
-  CreateOrganization: { name: string }
+  CreateEvent: undefined
   Main: undefined
   Scan: undefined
   Profile: undefined
