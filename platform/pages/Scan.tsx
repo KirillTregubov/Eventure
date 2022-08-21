@@ -59,9 +59,13 @@ export default function Scan({ navigation }: ScanProps) {
   const { top, bottom } = useSafeAreaInsets()
 
   if (!isVisible && !scanned) {
-    setTimeout(() => {
+    if (Platform.OS === 'android') {
+      setTimeout(() => {
+        setIsVisible(true)
+      }, 100)
+    } else if (Platform.OS === 'ios') {
       setIsVisible(true)
-    }, 100)
+    }
   }
 
   useEffect(() => {
@@ -76,6 +80,7 @@ export default function Scan({ navigation }: ScanProps) {
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       setScanned(false)
+      setIsVisible(false)
     })
 
     return unsubscribe
@@ -184,7 +189,7 @@ export default function Scan({ navigation }: ScanProps) {
               flexDirection: 'row',
               justifyContent: 'center'
             },
-            { bottom: 50 + bottom }
+            { bottom: 80 + bottom }
           ]}>
           <Hint>Scan Eventure QR Code</Hint>
         </View>

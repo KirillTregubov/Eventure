@@ -18,6 +18,9 @@ import ScanScreen from './pages/Scan'
 import ProfileScreen from './pages/Profile'
 import EventPage from './pages/EventPage'
 import OrganizationPage from './pages/OrganizationPage'
+import CreateOrganization from './pages/CreateOrganization'
+import CreateEvent from './pages/CreateEvent'
+import Styles from './lib/Styles'
 
 const MainStack = createNativeStackNavigator()
 function MainStackScreen() {
@@ -38,8 +41,8 @@ function PlatformPage() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#6366f1',
-        tabBarStyle: Platform.OS === 'android' ? { paddingBottom: 6 } : {}
+        tabBarActiveTintColor: Styles.colors.indigo['500'],
+        tabBarStyle: Platform.OS === 'android' ? { paddingBottom: 4 } : {}
       }}>
       <Tab.Screen
         name="Main"
@@ -59,10 +62,12 @@ function PlatformPage() {
             <View
               style={{
                 borderRadius: 999,
-                backgroundColor: focused ? '#4338ca' : '#6366f1',
+                backgroundColor: focused
+                  ? Styles.colors.indigo['500']
+                  : Styles.colors.indigo['600'],
                 padding: 15
               }}>
-              <QrcodeIcon color="#eef2ff" size={size + 6} />
+              <QrcodeIcon color={Styles.colors.indigo['50']} size={size + 6} />
             </View>
           )
         }}
@@ -111,6 +116,11 @@ export default function App() {
             name="OrganizationPage"
             component={OrganizationPage}
             options={({ route }) => ({ title: route.params.name })}
+          />
+          <Stack.Screen name="CreateEvent" component={CreateEvent} />
+          <Stack.Screen
+            name="CreateOrganization"
+            component={CreateOrganization}
           />
         </Stack.Navigator>
       </NavigationContainer>

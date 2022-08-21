@@ -11,12 +11,18 @@ import {
   View
 } from 'react-native'
 import { CogIcon } from 'react-native-heroicons/outline'
+import { PlusIcon } from 'react-native-heroicons/solid'
 
 import { NavigationParams } from '../lib/Navigation'
+import Styles from '../lib/Styles'
 
 function OrganizationCard({
+  organization,
   navigation
 }: {
+  organization: {
+    name: string
+  }
   navigation: StackNavigationProp<NavigationParams>
 }): JSX.Element {
   const scheme = useColorScheme()
@@ -24,14 +30,12 @@ function OrganizationCard({
   return (
     <View
       style={{
-        width: '50%',
-        height: 100,
         padding: 4
       }}>
       <TouchableHighlight
         onPress={() =>
           navigation.navigate('OrganizationPage', {
-            name: 'My Cool Organization'
+            name: organization.name
           })
         }
         underlayColor={scheme === 'dark' ? '#525252' : '#737373'}
@@ -40,8 +44,8 @@ function OrganizationCard({
           width: '100%',
           height: '100%',
           borderRadius: 8,
-          padding: 6,
-          paddingHorizontal: 8
+          padding: 8,
+          paddingHorizontal: 10
         }}>
         <View style={{ flex: 1 }}>
           <Text
@@ -51,7 +55,7 @@ function OrganizationCard({
               color: scheme === 'dark' ? 'white' : 'black'
               // consider using 'white' with image
             }}>
-            Organization Name
+            {organization.name}
           </Text>
         </View>
       </TouchableHighlight>
@@ -91,7 +95,15 @@ export default function Profile({ navigation }: ProfileProps) {
     firstName: 'John',
     lastName: 'Doe',
     username: 'johndoe',
-    organizations: [{}]
+    organizations: [
+      // {
+      //   name: 'My Cool Organization'
+      // },
+      // {
+      //   name: 'NOTLIVEROCK'
+      // },
+      // { name: 'Family Get-togethers' }
+    ]
   }
 
   return (
@@ -101,7 +113,7 @@ export default function Profile({ navigation }: ProfileProps) {
         alignItems: 'center',
         justifyContent: 'center'
       }}>
-      <View style={{ paddingTop: 12, height: 425 }}>
+      <View style={{ paddingTop: 12, height: 365 }}>
         <View
           style={{
             flex: 1,
@@ -188,49 +200,116 @@ export default function Profile({ navigation }: ProfileProps) {
             </View>
           </View>
         </View>
-        <View
-          style={{ paddingTop: 16, paddingHorizontal: 18, paddingBottom: 4 }}>
-          <Text
-            style={{
-              fontWeight: '700',
-              fontSize: 22,
-              color: scheme === 'dark' ? 'white' : 'black'
-            }}>
-            My Organizations
-          </Text>
-        </View>
-        <View style={{ height: 105, marginBottom: 2 }}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            pagingEnabled={true}
-            style={{ marginHorizontal: 14 }}>
-            {userData.organizations.length > 0 ? (
-              [...Array(2)].map((e, i) => (
-                <OrganizationCard navigation={navigation} key={i} />
-                // <View
-                //   style={{
-                //     width: 200,
-                //     height: 100,
-                //     padding: 4,
-                //     marginBottom: 5
-                //   }}
-                //   key={i}>
-                //   <View
-                //     style={{
-                //       backgroundColor:
-                //         scheme === 'dark' ? '#262626' : '#d4d4d4',
-                //       width: '100%',
-                //       height: '100%',
-                //       borderRadius: 8
-                //     }}></View>
-                // </View>
-              ))
-            ) : (
-              <></>
-            )}
-          </ScrollView>
-        </View>
+        {userData.organizations.length == 0 ? (
+          <View style={{ height: 88 }}>
+            <View
+              style={{
+                paddingTop: 16,
+                paddingHorizontal: 18
+              }}>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  color: scheme === 'dark' ? 'white' : 'black'
+                }}>
+                You need to have an organization to host an event.
+              </Text>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  color: scheme === 'dark' ? 'white' : 'black'
+                }}>
+                No worries, making one is free!
+              </Text>
+              <TouchableHighlight
+                onPress={() =>
+                  navigation.navigate('EventPage', { name: 'My Awesome Event' })
+                }
+                underlayColor={
+                  scheme === 'dark'
+                    ? Styles.colors.indigo['600']
+                    : Styles.colors.indigo['500']
+                }
+                style={{
+                  marginTop: 8,
+                  elevation: 4,
+                  backgroundColor:
+                    scheme === 'dark'
+                      ? Styles.colors.indigo['900']
+                      : Styles.colors.indigo['300'],
+                  borderRadius: 10,
+                  padding: 10
+                }}>
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                  <PlusIcon
+                    style={{ marginRight: 2 }}
+                    size={14}
+                    color={
+                      scheme === 'dark'
+                        ? Styles.colors.indigo['200']
+                        : Styles.colors.indigo['900']
+                    }
+                  />
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      fontSize: 15,
+                      fontWeight: '600',
+                      color:
+                        scheme === 'dark'
+                          ? Styles.colors.indigo['200']
+                          : Styles.colors.indigo['900']
+                    }}>
+                    Create Organization
+                  </Text>
+                </View>
+              </TouchableHighlight>
+            </View>
+          </View>
+        ) : (
+          <>
+            <View
+              style={{
+                paddingTop: 16,
+                paddingHorizontal: 18,
+                paddingBottom: 4
+              }}>
+              <Text
+                style={{
+                  fontWeight: '700',
+                  fontSize: 22,
+                  color: scheme === 'dark' ? 'white' : 'black'
+                }}>
+                My Organizations
+              </Text>
+            </View>
+            <View
+              style={{
+                height: Platform.OS === 'android' ? 43 : 40,
+                marginBottom: 2
+              }}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                pagingEnabled={true}
+                style={{ marginHorizontal: 14 }}>
+                {userData.organizations.map((organization, index) => (
+                  <OrganizationCard
+                    navigation={navigation}
+                    organization={organization}
+                    key={index}
+                  />
+                ))}
+              </ScrollView>
+            </View>
+          </>
+        )}
       </View>
     </View>
   )

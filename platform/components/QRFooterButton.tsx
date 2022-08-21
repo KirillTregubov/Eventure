@@ -26,7 +26,7 @@ export default function QRFooterButton({
 
   const tint = scheme === 'dark' ? 'dark' : 'light'
   const iconColor = tint === 'dark' ? '#fff' : '#000'
-  const intensity = isActive ? 100 : 35
+  const intensity = isActive ? 100 : 45
 
   const onPressIn = useCallback(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)

@@ -9,6 +9,7 @@ import {
 import { ChevronRightIcon } from 'react-native-heroicons/outline'
 
 import { NavigationParams } from '../lib/Navigation'
+import Styles from '../lib/Styles'
 
 function EventCard({
   navigation
@@ -21,26 +22,34 @@ function EventCard({
     <View
       style={{
         width: '50%',
-        height: 100,
+        height: 120,
         padding: 4
       }}>
       <TouchableHighlight
         onPress={() =>
           navigation.navigate('EventPage', { name: 'My Awesome Event' })
         }
-        underlayColor={scheme === 'dark' ? '#525252' : '#737373'}
+        underlayColor={
+          scheme === 'dark'
+            ? Styles.colors.neutral['600']
+            : Styles.colors.neutral['500']
+        }
         style={{
-          backgroundColor: scheme === 'dark' ? '#262626' : '#d4d4d4',
+          backgroundColor:
+            scheme === 'dark'
+              ? Styles.colors.neutral['800']
+              : Styles.colors.neutral['200'],
           width: '100%',
           height: '100%',
           borderRadius: 8,
           padding: 6,
-          paddingHorizontal: 8
+          paddingHorizontal: 8,
+          elevation: 3
         }}>
         <View style={{ flex: 1 }}>
           <Text
             style={{
-              fontSize: 11,
+              fontSize: 12,
               marginTop: 'auto',
               color: scheme === 'dark' ? '#737373' : 'black'
             }}>
@@ -48,6 +57,7 @@ function EventCard({
           </Text>
           <Text
             style={{
+              fontSize: 15,
               fontWeight: '900',
               color: scheme === 'dark' ? 'white' : 'black'
               // consider using 'white' with image
@@ -93,36 +103,58 @@ const HomeScreen = ({
         }}>
         <View
           style={{
-            backgroundColor: scheme === 'dark' ? '#312e81' : '#a5b4fc',
+            position: 'relative',
+            backgroundColor:
+              scheme === 'dark'
+                ? Styles.colors.indigo['900']
+                : Styles.colors.indigo['200'],
             padding: 9,
-            borderRadius: 4
+            borderRadius: 5,
+            elevation: 3
           }}>
           <Text
             style={{
               fontSize: 20,
               marginBottom: 2,
-              color: scheme === 'dark' ? '#a5b4fc' : '#3730a3'
+              color:
+                scheme === 'dark'
+                  ? Styles.colors.indigo['300']
+                  : Styles.colors.indigo['700']
             }}>
             Welcome back,{' '}
             <Text
               style={{
                 fontWeight: '700',
-                color: scheme === 'dark' ? '#e0e7ff' : '#312e81'
+                color:
+                  scheme === 'dark'
+                    ? Styles.colors.indigo['100']
+                    : Styles.colors.indigo['800']
               }}>
               {userData.firstName}
             </Text>
             !
           </Text>
-          <Text style={{ color: scheme === 'dark' ? '#a5b4fc' : '#3730a3' }}>
+          <Text
+            style={{
+              color:
+                scheme === 'dark'
+                  ? Styles.colors.indigo['300']
+                  : Styles.colors.indigo['700'],
+              width: '100%',
+              overflow: 'hidden'
+            }}>
             You have {userData.availablePrizes.amount} prize available from{' '}
             {userData.availablePrizes.organization}.{' '}
-            <View>
-              <ChevronRightIcon
-                size={12}
-                color={scheme === 'dark' ? '#a5b4fc' : '#3730a3'}
-              />
-            </View>
           </Text>
+          <ChevronRightIcon
+            style={{ position: 'absolute', right: 5, top: '50%' }}
+            size={14}
+            color={
+              scheme === 'dark'
+                ? Styles.colors.indigo['300']
+                : Styles.colors.indigo['700']
+            }
+          />
         </View>
       </View>
       <View style={{ paddingHorizontal: 18 }}>
