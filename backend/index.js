@@ -3,8 +3,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-const mysql = require("mysql2");
+// const mysql = require("mysql2");
 const { Sequelize, DataTypes } = require("sequelize");
+
 // const { DataTypes } = require("@sequelize/core");
 // const config = require("./config/config.json");
 
@@ -432,7 +433,6 @@ application.post("/create-event", async (req, res) => {
     !platformType ||
     !desc ||
     !maxAttendees ||
-    !maxBookings ||
     !category ||
     !regPrice ||
     !startDate ||
