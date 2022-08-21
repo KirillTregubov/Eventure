@@ -5,7 +5,7 @@ import { ChevronRightIcon } from 'react-native-heroicons/outline'
 import { NavigationParams } from '../lib/Navigation'
 import Styles from '../lib/Styles'
 import EventCard from '../components/EventCard'
-import { SampleEvent } from '../lib/Data'
+import { AllEvents, SampleEvent, UserData } from '../lib/Data'
 
 const HomeScreen = ({
   navigation
@@ -14,48 +14,15 @@ const HomeScreen = ({
 }) => {
   const scheme = useColorScheme()
 
-  const userData = {
-    firstName: 'John',
-    availablePrizes: {
-      amount: 1,
-      organization: 'LIVEROCK ENT'
-    },
-    rsvpEvents: []
-  }
-
-  const allEvents = [
-    {
-      name: 'My Awesome Event',
-      greeting:
-        'Welcome to the concert! The artist has a meet-and-greet after the show!',
-      pointsEarned: 20,
-      startDate: '25',
-      endDate: '27 July, 2022',
-      startTime: '1:00 p.m.',
-      endTime: '7:00 p.m.',
-      details: [
-        {
-          name: 'No Drinking Policy',
-          type: 'text',
-          content: 'No drinking on the premises.'
-        },
-        {
-          name: 'Interactive Map',
-          type: 'link',
-          content: 'https://google.com'
-        },
-        {
-          name: 'Our Website',
-          type: 'link',
-          content: 'https://google.com'
-        }
-      ],
-      address: {
-        latitude: 37.78825,
-        longitude: -122.4324
-      }
-    }
-  ]
+  // const userData = {
+  //   firstName: 'John',
+  //   availablePrizes: {
+  //     amount: 1,
+  //     organization: 'LIVEROCK ENT'
+  //   },
+  //   rsvpEvents: []
+  // }
+  const userData = UserData
 
   return (
     <ScrollView
@@ -147,7 +114,7 @@ const HomeScreen = ({
           paddingHorizontal: 14,
           paddingBottom: 20
         }}>
-        {[...Array(2)].map((e, i) => (
+        {userData.rsvpEvents.map((e, i) => (
           <EventCard navigation={navigation} event={SampleEvent} key={i} />
         ))}
       </View>
@@ -172,7 +139,7 @@ const HomeScreen = ({
           paddingHorizontal: 14,
           paddingBottom: 20
         }}>
-        {allEvents.map((event, index) => (
+        {AllEvents.map((event, index) => (
           <EventCard navigation={navigation} event={event} key={index} />
         ))}
       </View>

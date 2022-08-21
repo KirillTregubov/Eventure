@@ -94,7 +94,7 @@ export const Hackathon = {
 }
 
 export const SampleEvent = {
-  name: 'My Awesome Event',
+  name: 'Jack Morris Concert',
   greeting:
     'Welcome to the concert! The artist has a meet-and-greet after the show!',
   pointsEarned: 20,
@@ -161,39 +161,70 @@ export const AllEvents = [
   MonthlyBarbecue
 ]
 
-// current organization
-// const organizationData = {
-//   name: 'My Cool Organization',
-//   events: [
-//     {
-//       name: 'My Awesome Event'
-//       // dates
-//     }
-//   ],
-// all of its events
-//   attendees: [
-//     { username: 'johndoe', points: 200 },
-//     { username: 'janedoe', points: 150 }
-//   ]
-// }
+//current organization
+export const organizationData = {
+  name: 'Toronto Community Board',
+  events: [
+    {
+      name: 'Jack Morris Concert'
+      // dates
+    },
+    {
+      name: 'Toronto Hackathon'
+      // dates
+    }
+  ],
+  //all of its events
+  attendees: [
+    { username: 'johnsmith', points: 200 },
+    { username: 'alicebreck', points: 150 }
+  ]
+}
 
-// current User
-// const userData = {
-//   firstName: 'John',
-//   lastName: 'Doe',
-//   username: 'johndoe',
-//   organizations: [
-//     {
-//       name: 'My Cool Organization'
-//     },
-//     {
-//       name: 'NOTLIVEROCK'
-//     },
-//     { name: 'Family Get-togethers' }
-//   ],
-//   availablePrizes: {
-//   amount: 1,
-//   organization: 'LIVEROCK ENT'
-// },
-// rsvpEvents: []
-// }
+export const smithFamilyOrganizationData = {
+  name: 'Smith Family',
+  events: [
+    {
+      name: 'Smith Family August Barbecue'
+      // dates
+    }
+  ],
+  //all of its events
+  attendees: [
+    { username: 'johnsmith', points: 200 },
+    { username: 'supercoollawyer', points: 30 }
+  ]
+}
+
+//current User
+export const UserData = {
+  firstName: 'John',
+  lastName: 'Smith',
+  username: 'johnsmith',
+  organizations: [
+    {
+      name: 'Smith Family'
+    }
+  ],
+  availablePrizes: {
+    amount: 1,
+    organization: 'Smith Family'
+  },
+  rsvpEvents: [SampleEvent]
+}
+
+export const otherUserData = {
+  firstName: 'Mike',
+  lastName: 'Ross',
+  username: 'supercoollawyer',
+  organizations: [
+    {
+      name: 'Toronto Community Board'
+    }
+  ],
+  availablePrizes: {
+    amount: 1,
+    organization: 'Toronto Community Board'
+  },
+  rsvpEvents: [MonthlyBarbecue, Hackathon]
+}

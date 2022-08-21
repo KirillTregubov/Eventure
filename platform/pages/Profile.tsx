@@ -21,6 +21,7 @@ import { PlusIcon } from 'react-native-heroicons/solid'
 import { NavigationParams } from '../lib/Navigation'
 import Styles from '../lib/Styles'
 import { User } from '../lib/DataTypes'
+import { UserData } from '../lib/Data'
 
 function OrganizationCard({
   organization,
@@ -305,20 +306,22 @@ export default function Profile({ navigation }: ProfileProps) {
 
   const scheme = useColorScheme()
 
-  const userData = {
-    firstName: 'John',
-    lastName: 'Doe',
-    username: 'johndoe',
-    organizations: [
-      {
-        name: 'My Cool Organization'
-      },
-      {
-        name: 'NOTLIVEROCK'
-      },
-      { name: 'Family Get-togethers' }
-    ]
-  }
+  // const userData = {
+  //   firstName: 'John',
+  //   lastName: 'Doe',
+  //   username: 'johndoe',
+  //   organizations: [
+  //     {
+  //       name: 'My Cool Organization'
+  //     },
+  //     {
+  //       name: 'NOTLIVEROCK'
+  //     },
+  //     { name: 'Family Get-togethers' }
+  //   ]
+  // }
+
+  const userData = UserData
 
   return (
     <View
