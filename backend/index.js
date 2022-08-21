@@ -5,6 +5,10 @@ const cors = require("cors");
 
 const mysql = require("mysql2");
 const { Sequelize, DataTypes } = require("sequelize");
+
+// const { Sequelize, Model, DataTypes } = require("sequelize");
+// const sequelize = new Sequelize("sqlite::memory:");
+
 // const { DataTypes } = require("@sequelize/core");
 // const config = require("./config/config.json");
 
@@ -23,6 +27,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 require("dotenv").config();
 const application = express();
 const port = 3000;
+
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: "postgresql",
@@ -360,11 +365,13 @@ application.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-application.get("/events", (req, res) => {
+application.get("/events", async (req, res) => {
   //words
 
   //retrieves event specific info
-  const Events = Event.findAll();
+  const Events = await Event.findAll();
+
+  console.log(Events);
 
   //first retrive all events form the
   res.send({ data: Events });
@@ -383,7 +390,7 @@ application.post("/get-event", (req, res) => {
 
   const event = Event.findOne({
     where: {
-      eventId: eventID,
+      id: eventID,
     },
   });
 
@@ -459,11 +466,9 @@ application.post("/create-event", async (req, res) => {
     !platformType ||
     !desc ||
     !maxAttendees ||
-    !maxBookings ||
     !category ||
     !regPrice ||
     !startDate ||
-    !startTime ||
     !pointsEarned
   ) {
     return res.status(400).json({
