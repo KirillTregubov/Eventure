@@ -362,7 +362,7 @@ application.get("/", (req, res) => {
 });
 
 application.get("/events", async (req, res) => {
-  //words
+  //WORKS
 
   //retrieves event specific info
   const Events = await Event.findAll();
@@ -384,7 +384,7 @@ application.post("/get-event", async (req, res) => {
 
   const event = await Event.findOne({
     where: {
-      eventId: eventID,
+      id: eventID,
     },
   });
 
@@ -399,7 +399,7 @@ application.post("/get-event", async (req, res) => {
 });
 
 application.post("/create-organization", async (req, res) => {
-  //creating an organization
+  //WORKS
   // const userId = req.body.userId;
   // const organizationName = req.body.organizationName;
 
@@ -429,7 +429,7 @@ application.post("/create-organization", async (req, res) => {
 });
 
 application.post("/create-event", async (req, res) => {
-  console.log('hi');
+  //WORKS
   //creating an event
 
   //CAN WE MAKE THIS RETURN A QR CODE THAT GIVES EVENT INFO?
@@ -439,7 +439,6 @@ application.post("/create-event", async (req, res) => {
   //eventID, eventName, organizerID, platformType, desc, currAttendees, maxBookings, regPrice, unregUsers, startDate, startTime, duration
 
   // const eventID = res.body.eventID;
-  console.log(req);
 
   const organizationName = req.body.organizationName;
   const desc = req.body.desc;
@@ -523,9 +522,9 @@ application.post("/delete-organization", async (req, res) => {
   await organization.destroy();
 });
 
-application.post("/test-post-req", async (req, res) => {
-  console.log(req)
-})
+// application.post("/test-post-req", async (req, res) => {
+//   console.log(req)
+// })
 
 // connection.end();
 
