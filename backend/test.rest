@@ -1,2 +1,41 @@
 
-GET http://localhost:3001/get-event
+POST http://localhost:3000/create-event
+Content-Type: application/json
+
+{
+    "organizationName": "Rudy",
+    "desc": "booty",
+    "maxAttendees": 10,
+    "platformType": "online",
+    "regPrice": 12.50,
+    "category": "tour",
+    "startDate": "01/01/2022",
+    "endDate": "01/04/2022",
+    "duration": "20",
+    "discountPercent": 0.45,
+    "discountPoints": 200,
+    "pointsEarned": 50
+}
+
+###
+
+GET http://localhost:3000/events
+
+###
+
+POST http://localhost:3000/create-organization
+Content-Type: application/json
+
+{
+    "userId": 2,
+    "organizationName": "booty"
+}
+
+###
+
+POST http://localhost:3000/create-organization
+
+{
+    userId: 2,
+    organizationName: "booty"
+}
