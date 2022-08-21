@@ -24,16 +24,12 @@ require("dotenv").config();
 const application = express();
 const port = 3000;
 
-const sequelize = new Sequelize({
-  database: process.env.DB_DATABASE,
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  host: process.env.HOST,
-  dialect: "mysql",
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: "postgresql",
   dialectOptions: {
     ssl: {
-      require: true,
-      rejectUnauthorized: true,
+      require: true, // This will help you. But you will see nwe error
+      rejectUnauthorized: false, // This line will fix new error
     },
   },
 });
@@ -112,15 +108,21 @@ const Event = sequelize.define("Event", {
   },
 
   greeting: {
+    type: DataTypes.TEXT,
+  },
+
+  platformType: {
     type: DataTypes.STRING,
   },
 
   maxAttendees: {
     type: DataTypes.STRING,
+    defaultValue: 100,
   },
 
   price: {
     type: DataTypes.FLOAT,
+    defaultValue: 0,
   },
 
   category: {
@@ -129,6 +131,7 @@ const Event = sequelize.define("Event", {
 
   allowUnregistered: {
     type: DataTypes.BOOLEAN,
+    defaultValue: true,
   },
 
   startDate: {
@@ -141,10 +144,12 @@ const Event = sequelize.define("Event", {
 
   discountPrecent: {
     type: DataTypes.FLOAT,
+    defaultValue: 1,
   },
 
   discountPoints: {
     type: DataTypes.INTEGER,
+    defaultValue: 0,
   },
 
   pointsEarned: {
@@ -159,43 +164,40 @@ const Event = sequelize.define("Event", {
   //add image pfp attribute here
 });
 const Attendance = sequelize.define("Attendance", {
-  userId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: User,
-      key: "userId",
-    },
-  },
-  eventId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: Event,
-      key: "eventId",
-    },
-  },
+  // userId: {
+  //   type: DataTypes.INTEGER,
+  //   references: {
+  //     model: User,
+  //     key: "userId",
+  //   },
+  // },
+  // eventId: {
+  //   type: DataTypes.INTEGER,
+  //   references: {
+  //     model: Event,
+  //     key: "eventId",
+  //   },
+  // },
   attended: {
     type: DataTypes.BOOLEAN,
   },
 });
 
-User.belongsToMany(Event, { through: Attendance });
-Event.belongsToMany(User, { through: Attendance });
-
 const PointCount = sequelize.define("PointCount", {
-  userId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: User,
-      key: "userId",
-    },
-  },
-  organizerId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: Organization,
-      key: "organizerId",
-    },
-  },
+  // userId: {
+  //   type: DataTypes.INTEGER,
+  //   references: {
+  //     model: User,
+  //     key: "userId",
+  //   },
+  // },
+  // organizerId: {
+  //   type: DataTypes.INTEGER,
+  //   references: {
+  //     model: Organization,
+  //     key: "organizerId",
+  //   },
+  // },
   points: {
     type: DataTypes.INTEGER,
   },
@@ -204,11 +206,18 @@ const PointCount = sequelize.define("PointCount", {
 User.belongsToMany(Organization, { through: PointCount });
 Organization.belongsToMany(User, { through: PointCount });
 
-User.hasMany(Organization, { foreignKey: "organizationId" });
-Organization.belongsTo(User, { foreignKey: "userId" });
+User.belongsToMany(Event, { through: Attendance });
+Event.belongsToMany(User, { through: Attendance });
 
-Event.belongsTo(Organization, { foreignKey: "organizationId" });
-Organization.hasMany(Event, { foreignKey: "eventId" });
+User.hasMany(Organization);
+// , { foreignKey: "userId" }
+Organization.belongsTo(User);
+// , { foreignKey: "organizationId" }
+
+Event.belongsTo(Organization);
+// , { foreignKey: "eventId" }
+Organization.hasMany(Event);
+// , { foreignKey: "organizationId" }
 
 (async () => {
   await sequelize.sync({ force: true });
@@ -331,6 +340,7 @@ application.get("/", (req, res) => {
 
 application.get("/events", (req, res) => {
   //retrieves event specific info
+  const Events = Event.findAll();
 
   //first retrive all events form the
   res.send({ data: events });
@@ -340,7 +350,7 @@ application.get("/events", (req, res) => {
 });
 
 application.post("/get-event", (req, res) => {
-  const eventID = res.body.eventId;
+  const eventID = req.body.eventId;
 
   if (!eventID) {
     res.status(400).send("eventId is required");
@@ -352,6 +362,13 @@ application.post("/get-event", (req, res) => {
       eventId: eventID,
     },
   });
+
+  if (event == null) {
+    res.send({
+      message: "Event not found",
+    });
+    return;
+  }
 
   res.status(200).send({ data: event });
 });
@@ -377,13 +394,14 @@ application.post("/create-organization", async (req, res) => {
   });
 
   res.status(200).send({
+    message: "organization created",
     data: org, //replace this with organization ID
   });
 
   return;
 });
 
-application.post("/create-event", (req, res) => {
+application.post("/create-event", async (req, res) => {
   //creating an event
 
   //CAN WE MAKE THIS RETURN A QR CODE THAT GIVES EVENT INFO?
@@ -392,28 +410,32 @@ application.post("/create-event", (req, res) => {
   //event should have:
   //eventID, eventName, organizerID, platformType, desc, currAttendees, maxBookings, regPrice, unregUsers, startDate, startTime, duration
 
-  const eventID = res.body.eventID;
-  const organizerID = res.body.organizerID;
-  const platformType = res.body.platformType;
+  // const eventID = res.body.eventID;
+  const organizationName = res.body.organizationName;
   const desc = res.body.desc;
-  const currAttendees = res.body.currAttendees;
-  const maxBookings = res.body.maxBookings;
+  const maxAttendees = res.body.maxAttendees;
+  const platformType = res.body.platformType;
   const regPrice = res.body.regPrice;
-  const unregUsers = res.body.unregUsers; //should be default to false
+  const category = res.body.category;
+  const allowUnregistered = res.body.allowUnregistered; //should be default to false
   const startDate = res.body.startDate;
-  const startTime = res.body.startTime;
+  const endDate = res.body.endDate;
   const duration = res.body.duration;
+  const discountPercent = res.body.discountPercent;
+  const discountPoints = res.body.discountPoints;
+  const pointsEarned = res.body.pointsEarned;
 
   if (
-    !organizerID ||
+    !organizationName ||
     !platformType ||
     !desc ||
-    !currAttendees ||
+    !maxAttendees ||
     !maxBookings ||
+    !category ||
     !regPrice ||
     !startDate ||
     !startTime ||
-    !duration
+    !pointsEarned
   ) {
     return res.status(400).json({
       error: "enter all the required fields",
@@ -440,9 +462,24 @@ application.post("/create-event", (req, res) => {
 
   //put it into the database here:
 
+  const event = await Event.create({
+    organizationName: organizationName,
+    greeting: desc,
+    maxAttendees: maxAttendees,
+    platformType: platformType,
+    price: regPrice,
+    category: category,
+    allowUnregistered: allowUnregistered,
+    startDate: startDate,
+    endDate: endDate,
+    discountPercent: discountPercent, //float from 0 to 1
+    discountPoints: discountPoints, // number of points req to get discount
+    pointsEarned: pointsEarned, // points earned for the spec org from this event
+  });
+
   res.status(200).send({
     message: "event created",
-    data: eventId, //replace this with event ID
+    data: event, //replace this with event ID
   });
 
   return;
