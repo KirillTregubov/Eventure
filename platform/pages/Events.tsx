@@ -82,7 +82,7 @@ const HomeScreen = ({
             You have {userData.availablePrizes.amount} prize available from{' '}
             {userData.availablePrizes.organization}.{' '}
           </Text>
-          <ChevronRightIcon
+          {/* <ChevronRightIcon
             style={{ position: 'absolute', right: 5, top: '50%' }}
             size={14}
             color={
@@ -90,7 +90,7 @@ const HomeScreen = ({
                 ? Styles.colors.indigo['300']
                 : Styles.colors.indigo['700']
             }
-          />
+          /> */}
         </View>
       </View>
       <View style={{ paddingHorizontal: 18 }}>

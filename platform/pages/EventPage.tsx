@@ -1,6 +1,15 @@
+import { useState } from 'react'
 import { Button, Linking, Text, useColorScheme, View } from 'react-native'
 import { CalendarIcon, ClockIcon } from 'react-native-heroicons/outline'
 import MapView, { Marker } from 'react-native-maps'
+import {
+  AllEvents,
+  CollegeTour,
+  FriendlyEvent,
+  Hackathon,
+  MonthlyBarbecue,
+  SampleEvent
+} from '../lib/Data'
 import Styles from '../lib/Styles'
 
 type EventPageParams = {
@@ -14,39 +23,50 @@ type EventPageParams = {
 export default function EventPage({ route }: EventPageParams) {
   const scheme = useColorScheme()
 
-  // fetch
-  console.log(route.params.name)
+  let eventData = null
 
-  const eventData = {
-    name: 'My Awesome Event',
-    greeting:
-      'Welcome to the concert! The artist has a meet-and-greet after the show!',
-    pointsEarned: 20,
-    startDate: '25',
-    endDate: '27 July, 2022',
-    startTime: '1:00 p.m.',
-    endTime: '7:00 p.m.',
-    details: [
-      {
-        name: 'No Drinking Policy',
-        type: 'text',
-        content: 'No drinking on the premises.'
-      },
-      {
-        name: 'Interactive Map',
-        type: 'link',
-        content: 'https://google.com'
-      },
-      {
-        name: 'Our Website',
-        type: 'link',
-        content: 'https://google.com'
-      }
-    ],
-    address: {
-      latitude: 37.78825,
-      longitude: -122.4324
-    }
+  const goal = route.params.name
+  console.log(goal)
+  if (goal === 'Jack Morris Concert') eventData = SampleEvent
+  else if (goal === 'My Friendly Get-Together') eventData = FriendlyEvent
+  else if (goal === 'College Tour') eventData = CollegeTour
+  else if (goal === 'Toronto Hackathon') eventData = Hackathon
+  else if (goal === 'Smith Family August Barbecue') eventData = MonthlyBarbecue
+
+  // const eventData = {
+  //   name: 'My Awesome Event',
+  //   greeting:
+  //     'Welcome to the concert! The artist has a meet-and-greet after the show!',
+  //   pointsEarned: 20,
+  //   startDate: '25',
+  //   endDate: '27 July, 2022',
+  //   startTime: '1:00 p.m.',
+  //   endTime: '7:00 p.m.',
+  //   details: [
+  //     {
+  //       name: 'No Drinking Policy',
+  //       type: 'text',
+  //       content: 'No drinking on the premises.'
+  //     },
+  //     {
+  //       name: 'Interactive Map',
+  //       type: 'link',
+  //       content: 'https://google.com'
+  //     },
+  //     {
+  //       name: 'Our Website',
+  //       type: 'link',
+  //       content: 'https://google.com'
+  //     }
+  //   ],
+  //   address: {
+  //     latitude: 37.78825,
+  //     longitude: -122.4324
+  //   }
+  // }
+
+  if (!eventData) {
+    return <></>
   }
 
   return (
@@ -150,7 +170,7 @@ export default function EventPage({ route }: EventPageParams) {
         points earned
       </Text>
       <Text style={{ color: scheme === 'dark' ? 'white' : 'black' }}>
-        Welcome to the Event! Enjoy your time here!
+        {eventData.greeting}
       </Text>
       <Text
         style={{

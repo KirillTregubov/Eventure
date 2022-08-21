@@ -20,9 +20,7 @@ export default function EventCard({
         padding: 4
       }}>
       <TouchableHighlight
-        onPress={() =>
-          navigation.navigate('EventPage', { name: 'My Awesome Event' })
-        }
+        onPress={() => navigation.navigate('EventPage', { name: event.name })}
         underlayColor={
           scheme === 'dark'
             ? Styles.colors.neutral['600']
