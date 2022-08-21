@@ -137,11 +137,11 @@ const Event = sequelize.define("Event", {
   },
 
   startDate: {
-    type: DataTypes.DATE,
+    type: DataTypes.STRING,
   },
 
   endDate: {
-    type: DataTypes.DATE,
+    type: DataTypes.STRING,
   },
 
   discountPrecent: {
