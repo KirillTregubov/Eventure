@@ -50,7 +50,7 @@ const User = sequelize.define(
   "User",
   {
     userId: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       primarykey: true,
     },
 
@@ -81,7 +81,8 @@ const User = sequelize.define(
 
 const Organization = sequelize.define("Organization", {
   organizationId: {
-    type: DataTypes.UUID,
+    type: DataTypes.INTEGER,
+    //autoIncrement: true,
     primarykey: true,
   },
 
@@ -99,7 +100,8 @@ const Organization = sequelize.define("Organization", {
 
 const Event = sequelize.define("Event", {
   eventId: {
-    type: DataTypes.UUID,
+    type: DataTypes.INTEGER,
+    //autoIncrement: true,
     primarykey: true,
   },
 
@@ -343,7 +345,7 @@ application.get("/events", (req, res) => {
   const Events = Event.findAll();
 
   //first retrive all events form the
-  res.send({ data: events });
+  res.send({ data: Events });
   // res.send(points_earned);
   // res.send(people_amount);
   // res.send(people_amount);
@@ -363,7 +365,7 @@ application.post("/get-event", (req, res) => {
     },
   });
 
-  if (event == null) {
+  if (!event || Object.keys(event).length === 0) {
     res.send({
       message: "Event not found",
     });
@@ -483,6 +485,16 @@ application.post("/create-event", async (req, res) => {
   });
 
   return;
+});
+
+application.post("/delete-organization", async (req, res) => {
+  const organizationId = req.body.organizationId;
+  const organization = Organization.findOne({
+    where: {
+      organizationId: organizationId,
+    },
+  });
+  await organization.destroy();
 });
 
 // connection.end();

@@ -1,4 +1,6 @@
 import { Button, Linking, Text, useColorScheme, View } from 'react-native'
+import { CalendarIcon, ClockIcon } from 'react-native-heroicons/outline'
+import Styles from '../lib/Styles'
 
 type EventPageParams = {
   route: {
@@ -17,6 +19,10 @@ export default function EventPage({ route }: EventPageParams) {
   const eventData = {
     name: 'My Awesome Event',
     pointsEarned: 20,
+    startDate: '25',
+    endDate: '27 July, 2022',
+    startTime: '1:00 p.m.',
+    endTime: '7:00 p.m.',
     details: [
       {
         name: 'No Drinking Policy',
@@ -47,6 +53,66 @@ export default function EventPage({ route }: EventPageParams) {
         }}>
         Event: {eventData.name}
       </Text>
+      <View
+        style={{
+          marginTop: 12,
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center'
+        }}>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginRight: 'auto'
+          }}>
+          <CalendarIcon
+            style={{ marginRight: 3 }}
+            size={22}
+            color={
+              scheme === 'dark'
+                ? Styles.colors.neutral['400']
+                : Styles.colors.neutral['500']
+            }
+          />
+          <Text
+            style={{
+              color:
+                scheme === 'dark'
+                  ? Styles.colors.neutral['400']
+                  : Styles.colors.neutral['500']
+            }}>
+            {organizationData.startDate} - {organizationData.endDate}
+          </Text>
+        </View>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginRight: 'auto'
+          }}>
+          <ClockIcon
+            style={{ marginRight: 3 }}
+            size={22}
+            color={
+              scheme === 'dark'
+                ? Styles.colors.neutral['400']
+                : Styles.colors.neutral['500']
+            }
+          />
+          <Text
+            style={{
+              color:
+                scheme === 'dark'
+                  ? Styles.colors.neutral['400']
+                  : Styles.colors.neutral['500']
+            }}>
+            {organizationData.startTime} - {organizationData.endTime}
+          </Text>
+        </View>
+      </View>
       <Text style={{ color: scheme === 'dark' ? 'white' : 'black' }}>
         Welcome to the Event! Enjoy your time here!
       </Text>
