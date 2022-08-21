@@ -29,3 +29,5 @@ export const SampleEvent = {
     longitude: -122.4324
   }
 }
+
+export const SampleAllEvents = [SampleEvent]
