@@ -1,4 +1,3 @@
-import { StackNavigationProp } from '@react-navigation/stack'
 import {
   Alert,
   ScrollView,
@@ -7,6 +6,7 @@ import {
   useColorScheme,
   View
 } from 'react-native'
+import { StackNavigationProp } from '@react-navigation/stack'
 import { CalendarIcon, TrashIcon } from 'react-native-heroicons/solid'
 
 import { NavigationParams } from '../lib/Navigation'
@@ -17,8 +17,9 @@ import { SampleEvent } from '../lib/Data'
 function AttendeeCard({
   attendee
 }: {
-  organization: {
-    name: string
+  attendee: {
+    username: string
+    points: number
   }
 }): JSX.Element {
   const scheme = useColorScheme()
@@ -241,7 +242,7 @@ export default function OrganizationPage({
       </View>
       <View
         style={{
-          flexDirection: 'col',
+          // flexDirection: 'col',
           // flexWrap: 'wrap',
           justifyContent: 'center',
           alignItems: 'center',

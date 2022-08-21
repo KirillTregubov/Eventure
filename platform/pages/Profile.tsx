@@ -20,6 +20,7 @@ import { PlusIcon } from 'react-native-heroicons/solid'
 
 import { NavigationParams } from '../lib/Navigation'
 import Styles from '../lib/Styles'
+import { User } from '../lib/DataTypes'
 
 function OrganizationCard({
   organization,
@@ -75,6 +76,11 @@ function CreateOrganizationModal({
   show,
   setShow,
   navigation
+}: {
+  userData: User
+  show: boolean
+  setShow: (show: boolean) => void
+  navigation: StackNavigationProp<NavigationParams>
 }): JSX.Element {
   const [organizationName, setOrganizationName] = useState('')
   const scheme = useColorScheme()
@@ -522,7 +528,6 @@ export default function Profile({ navigation }: ProfileProps) {
         userData={userData}
         show={show}
         setShow={setShow}
-        required={true}
         navigation={navigation}
       />
     </View>
