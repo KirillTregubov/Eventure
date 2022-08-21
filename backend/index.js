@@ -289,7 +289,27 @@ const organizations_list = [
 const startDate = [];
 const endDate = [];
 
+application.use(function (req, res, next) {
+
+  // Website you wish to allow to connect
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  // Request methods you wish to allow
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+  // Request headers you wish to allow
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+  // Set to true if you need the website to include cookies in the requests sent
+  // to the API (e.g. in case you use sessions)
+  res.setHeader('Access-Control-Allow-Credentials', true);
+
+  // Pass to next layer of middleware
+  next();
+});
+
 application.use(cors());
+application.use(express.json());
 
 application.use(bodyParser.urlencoded({ extended: false }));
 application.use(bodyParser.json());
@@ -342,6 +362,8 @@ application.get("/", (req, res) => {
 });
 
 application.get("/events", (req, res) => {
+  //words
+
   //retrieves event specific info
   const Events = Event.findAll();
 
@@ -378,8 +400,10 @@ application.post("/get-event", (req, res) => {
 
 application.post("/create-organization", async (req, res) => {
   //creating an organization
-  const userId = req.body.userId;
-  const organizationName = req.body.organizationName;
+  // const userId = req.body.userId;
+  // const organizationName = req.body.organizationName;
+
+  const { userId, organizationName } = req.body;
   // const image = req.body.image;
 
   if (!userId || !organizationName) {
@@ -405,6 +429,7 @@ application.post("/create-organization", async (req, res) => {
 });
 
 application.post("/create-event", async (req, res) => {
+  console.log('hi');
   //creating an event
 
   //CAN WE MAKE THIS RETURN A QR CODE THAT GIVES EVENT INFO?
@@ -414,19 +439,21 @@ application.post("/create-event", async (req, res) => {
   //eventID, eventName, organizerID, platformType, desc, currAttendees, maxBookings, regPrice, unregUsers, startDate, startTime, duration
 
   // const eventID = res.body.eventID;
-  const organizationName = res.body.organizationName;
-  const desc = res.body.desc;
-  const maxAttendees = res.body.maxAttendees;
-  const platformType = res.body.platformType;
-  const regPrice = res.body.regPrice;
-  const category = res.body.category;
-  const allowUnregistered = res.body.allowUnregistered; //should be default to false
-  const startDate = res.body.startDate;
-  const endDate = res.body.endDate;
-  const duration = res.body.duration;
-  const discountPercent = res.body.discountPercent;
-  const discountPoints = res.body.discountPoints;
-  const pointsEarned = res.body.pointsEarned;
+  console.log(req);
+
+  const organizationName = req.body.organizationName;
+  const desc = req.body.desc;
+  const maxAttendees = req.body.maxAttendees;
+  const platformType = req.body.platformType;
+  const regPrice = req.body.regPrice;
+  const category = req.body.category;
+  const allowUnregistered = req.body.allowUnregistered; //should be default to false
+  const startDate = req.body.startDate;
+  const endDate = req.body.endDate;
+  const duration = req.body.duration;
+  const discountPercent = req.body.discountPercent;
+  const discountPoints = req.body.discountPoints;
+  const pointsEarned = req.body.pointsEarned;
 
   if (
     !organizationName ||
@@ -496,6 +523,10 @@ application.post("/delete-organization", async (req, res) => {
   });
   await organization.destroy();
 });
+
+application.post("/test-post-req", async (req, res) => {
+  console.log(req)
+})
 
 // connection.end();
 
