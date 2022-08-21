@@ -361,11 +361,11 @@ application.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-application.get("/events", (req, res) => {
+application.get("/events", async (req, res) => {
   //words
 
   //retrieves event specific info
-  const Events = Event.findAll();
+  const Events = await Event.findAll();
 
   //first retrive all events form the
   res.send({ data: Events });
@@ -374,7 +374,7 @@ application.get("/events", (req, res) => {
   // res.send(people_amount);
 });
 
-application.post("/get-event", (req, res) => {
+application.post("/get-event", async (req, res) => {
   const eventID = req.body.eventId;
 
   if (!eventID) {
@@ -382,7 +382,7 @@ application.post("/get-event", (req, res) => {
     return;
   }
 
-  const event = Event.findOne({
+  const event = await Event.findOne({
     where: {
       eventId: eventID,
     },
@@ -463,7 +463,6 @@ application.post("/create-event", async (req, res) => {
     !category ||
     !regPrice ||
     !startDate ||
-    !startTime ||
     !pointsEarned
   ) {
     return res.status(400).json({
