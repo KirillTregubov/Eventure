@@ -17,6 +17,7 @@ Platform/Frontend Developer: [@KirillTregubov](https://www.github.com/KirillTreg
 
 Backend/Server Developers: [@SoumilDharaskar](https://www.github.com/SoumilDharaskar) [@KaranpreetRaja](https://www.github.com/KaranpreetRaja) [@whyismynamerudy](https://www.github.com/whyismynamerudy) 
 
+<!--
 ## How to use the app
 Since we cannot afford to pay our tech overlords for signing/publishing certificates, you can use our application by:
 1. Installing the [Expo Go](https://expo.dev/client) app.
@@ -25,7 +26,6 @@ Since we cannot afford to pay our tech overlords for signing/publishing certific
   <div align="center">
     <img style='width: 30%' src="images/expo-go.svg" alt="QR Code"></img>
   </div>
-<!--
 2. Sign in to the Expo app with the following credentials.
     ```
     Username: 
