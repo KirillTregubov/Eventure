@@ -3,48 +3,58 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-const { Sequelize } = require("sequelize");
-import { DataTypes } from "@sequelize/core";
-const mysql = require("mysql2/promise");
-const config = require("config.json");
+const mysql = require("mysql2");
+const { Sequelize, DataTypes } = require("sequelize");
+// const { DataTypes } = require("@sequelize/core");
+// const config = require("./config/config.json");
 
-module.exports = db = {};
+// async () => {
+// module.exports = db = {};
 
-initializeDB();
+// const { host, dbPort, user, password, database } = config.database;
 
-async function initializeDB() {
-  const { host, port, user, password, database } = config.database;
+// const connection = await mysql.createConnection({
+//   host,
+//   dbPort,
+//   user,
+//   password,
+// });
 
-  const connection = await mysql.createConnection({
-    host,
-    port,
-    user,
-    password,
-  });
-
-  await connection.query(`CREATE DATABASE IF NOT EXISTS \`${database}\`;`);
-
-  const sequelize = new Sequelize("database", "username", "password", {
-    host: "localhost",
-    dialect: "mysql",
-  });
-}
-
+require("dotenv").config();
 const application = express();
 const port = 3000;
 
-require("dotenv").config();
+const sequelize = new Sequelize({
+  database: process.env.DB_DATABASE,
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  host: process.env.HOST,
+  dialect: "mysql",
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
+});
 
-const mysql = require("mysql2");
-const connection = mysql.createConnection(process.env.DATABASE_URL);
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("Connection has been established successfully.");
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+  }
+})();
 
+// const mysql = require("mysql2");
+// const connection = mysql.createConnection(process.env.DATABASE_URL);
 //Creating models below:
 const User = sequelize.define(
   "User",
   {
     userId: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+      type: DataTypes.UUID,
       primarykey: true,
     },
 
@@ -64,6 +74,10 @@ const User = sequelize.define(
       type: DataTypes.STRING,
     },
 
+    number: {
+      type: DataTypes.STRING,
+    },
+
     //add image pfp attribute here
   }
   // sequelize has auto plurization for table name, so it dosnt need to be declared
@@ -71,8 +85,7 @@ const User = sequelize.define(
 
 const Organization = sequelize.define("Organization", {
   organizationId: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
+    type: DataTypes.UUID,
     primarykey: true,
   },
 
@@ -90,8 +103,7 @@ const Organization = sequelize.define("Organization", {
 
 const Event = sequelize.define("Event", {
   eventId: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
+    type: DataTypes.UUID,
     primarykey: true,
   },
 
@@ -111,6 +123,10 @@ const Event = sequelize.define("Event", {
     type: DataTypes.FLOAT,
   },
 
+  category: {
+    type: DataTypes.STRING,
+  },
+
   allowUnregistered: {
     type: DataTypes.BOOLEAN,
   },
@@ -128,6 +144,10 @@ const Event = sequelize.define("Event", {
   },
 
   discountPoints: {
+    type: DataTypes.INTEGER,
+  },
+
+  pointsEarned: {
     type: DataTypes.INTEGER,
   },
 
@@ -169,11 +189,11 @@ const PointCount = sequelize.define("PointCount", {
       key: "userId",
     },
   },
-  organizationId: {
+  organizerId: {
     type: DataTypes.INTEGER,
     references: {
       model: Organization,
-      key: "organizationId",
+      key: "organizerId",
     },
   },
   points: {
@@ -189,6 +209,11 @@ Organization.belongsTo(User, { foreignKey: "userId" });
 
 Event.belongsTo(Organization, { foreignKey: "organizationId" });
 Organization.hasMany(Event, { foreignKey: "eventId" });
+
+(async () => {
+  await sequelize.sync({ force: true });
+  // Code here
+})();
 
 const events = [
   {
@@ -314,45 +339,45 @@ application.get("/events", (req, res) => {
   // res.send(people_amount);
 });
 
-application.get("/get-event-by-user", (req, res) => {
-  // Returning _____ based on userId and eventId
-  const userId = res.body.userId;
-  const eventId = res.body.eventId;
+application.post("/get-event", (req, res) => {
+  const eventID = res.body.eventId;
 
-  if (!userId || !eventId) {
-    res.status(400).send("enter all the required fields");
+  if (!eventID) {
+    res.status(400).send("eventId is required");
     return;
   }
 
-  const user = users.find((user) => user.id == userId);
-  const event = events.find((event) => event.id == eventId);
-  // fetch user points
+  const event = Event.findOne({
+    where: {
+      eventId: eventID,
+    },
+  });
 
   res.status(200).send({ data: event });
-
-  // res.send({ data: events });
 });
 
-application.post("/create-organization", (req, res) => {
+application.post("/create-organization", async (req, res) => {
   //creating an organization
   const userId = req.body.userId;
-  const username = req.body.username;
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
-  const email = req.body.email;
-  const image = req.body.image;
+  const organizationName = req.body.organizationName;
+  // const image = req.body.image;
 
-  if (!userId || !username || !firstName || !lastName || !email || !image) {
+  if (!userId || !organizationName) {
     return res.status(400).json({
       error: "enter all the required fields",
     });
   }
 
-  const organizationId = 1;
+  // Create Organization in DB organizationName userId
+
+  //const organizationId = 1;
+
+  const org = await Organization.create({
+    organizationName: organizationName,
+  });
 
   res.status(200).send({
-    message: "organization created",
-    data: organizationId, //replace this with organization ID
+    data: org, //replace this with organization ID
   });
 
   return;
@@ -380,7 +405,6 @@ application.post("/create-event", (req, res) => {
   const duration = res.body.duration;
 
   if (
-    !eventID ||
     !organizerID ||
     !platformType ||
     !desc ||
@@ -416,8 +440,6 @@ application.post("/create-event", (req, res) => {
 
   //put it into the database here:
 
-  const eventId = 1;
-
   res.status(200).send({
     message: "event created",
     data: eventId, //replace this with event ID
@@ -426,6 +448,7 @@ application.post("/create-event", (req, res) => {
   return;
 });
 
-connection.end();
+// connection.end();
 
 application.listen(port, () => console.log(`App listening on port ${port}!`)); // port 3000 in use
+// };
