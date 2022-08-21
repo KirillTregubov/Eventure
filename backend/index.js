@@ -4,11 +4,31 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const { Sequelize } = require("sequelize");
+import { DataTypes } from "@sequelize/core";
+const mysql = require("mysql2/promise");
+const config = require("config.json");
 
-const sequelize = new Sequelize("database", "username", "password", {
-  host: "localhost",
-  dialect: "mysql",
-});
+module.exports = db = {};
+
+initializeDB();
+
+async function initializeDB() {
+  const { host, port, user, password, database } = config.database;
+
+  const connection = await mysql.createConnection({
+    host,
+    port,
+    user,
+    password,
+  });
+
+  await connection.query(`CREATE DATABASE IF NOT EXISTS \`${database}\`;`);
+
+  const sequelize = new Sequelize("database", "username", "password", {
+    host: "localhost",
+    dialect: "mysql",
+  });
+}
 
 const application = express();
 const port = 3000;
@@ -18,8 +38,157 @@ require("dotenv").config();
 const mysql = require("mysql2");
 const connection = mysql.createConnection(process.env.DATABASE_URL);
 
-//creating the users table:
-const User = sequelize.define("User", {});
+//Creating models below:
+const User = sequelize.define(
+  "User",
+  {
+    userId: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primarykey: true,
+    },
+
+    username: {
+      type: DataTypes.STRING,
+    },
+
+    firstname: {
+      type: DataTypes.STRING,
+    },
+
+    lastname: {
+      type: DataTypes.STRING,
+    },
+
+    email: {
+      type: DataTypes.STRING,
+    },
+
+    //add image pfp attribute here
+  }
+  // sequelize has auto plurization for table name, so it dosnt need to be declared
+);
+
+const Organization = sequelize.define("Organization", {
+  organizationId: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primarykey: true,
+  },
+
+  organizationName: {
+    type: DataTypes.STRING,
+  },
+
+  // userId: {
+  //   //orginization host/owner
+  //   type: DataTypes.INTEGER,
+  // },
+
+  //add image pfp attribute here
+});
+
+const Event = sequelize.define("Event", {
+  eventId: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primarykey: true,
+  },
+
+  organizationName: {
+    type: DataTypes.STRING,
+  },
+
+  greeting: {
+    type: DataTypes.STRING,
+  },
+
+  maxAttendees: {
+    type: DataTypes.STRING,
+  },
+
+  price: {
+    type: DataTypes.FLOAT,
+  },
+
+  allowUnregistered: {
+    type: DataTypes.BOOLEAN,
+  },
+
+  startDate: {
+    type: DataTypes.DATE,
+  },
+
+  endDate: {
+    type: DataTypes.DATE,
+  },
+
+  discountPrecent: {
+    type: DataTypes.FLOAT,
+  },
+
+  discountPoints: {
+    type: DataTypes.INTEGER,
+  },
+
+  // userId: {
+  //   //orginization host/owner
+  //   type: DataTypes.INTEGER,
+  // },
+
+  //add image pfp attribute here
+});
+const Attendance = sequelize.define("Attendance", {
+  userId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: User,
+      key: "userId",
+    },
+  },
+  eventId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: Event,
+      key: "eventId",
+    },
+  },
+  attended: {
+    type: DataTypes.BOOLEAN,
+  },
+});
+
+User.belongsToMany(Event, { through: Attendance });
+Event.belongsToMany(User, { through: Attendance });
+
+const PointCount = sequelize.define("PointCount", {
+  userId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: User,
+      key: "userId",
+    },
+  },
+  organizationId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: Organization,
+      key: "organizationId",
+    },
+  },
+  points: {
+    type: DataTypes.INTEGER,
+  },
+});
+
+User.belongsToMany(Organization, { through: PointCount });
+Organization.belongsToMany(User, { through: PointCount });
+
+User.hasMany(Organization, { foreignKey: "organizationId" });
+Organization.belongsTo(User, { foreignKey: "userId" });
+
+Event.belongsTo(Organization, { foreignKey: "organizationId" });
+Organization.hasMany(Event, { foreignKey: "eventId" });
 
 const events = [
   {
@@ -27,12 +196,30 @@ const events = [
     name: "Event 1",
     startDate: {},
     endDate: {},
+    pointsEarned: {},
+    address: {},
+    details: [
+      {
+        name: {},
+        type: {},
+        content: {},
+      },
+    ],
   },
   {
     eventId: 2,
     name: "Event 2",
     startDate: {},
     endDate: {},
+    pointsEarned: {},
+    address: {},
+    details: [
+      {
+        name: {},
+        type: {},
+        content: {},
+      },
+    ],
   },
 ];
 
@@ -127,7 +314,7 @@ application.get("/events", (req, res) => {
   // res.send(people_amount);
 });
 
-application.get("/get-event", (req, res) => {
+application.get("/get-event-by-user", (req, res) => {
   // Returning _____ based on userId and eventId
   const userId = res.body.userId;
   const eventId = res.body.eventId;
@@ -139,10 +326,36 @@ application.get("/get-event", (req, res) => {
 
   const user = users.find((user) => user.id == userId);
   const event = events.find((event) => event.id == eventId);
+  // fetch user points
 
-  const sendBack = [{}];
+  res.status(200).send({ data: event });
 
-  res.send({ data: events });
+  // res.send({ data: events });
+});
+
+application.post("/create-organization", (req, res) => {
+  //creating an organization
+  const userId = req.body.userId;
+  const username = req.body.username;
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
+  const email = req.body.email;
+  const image = req.body.image;
+
+  if (!userId || !username || !firstName || !lastName || !email || !image) {
+    return res.status(400).json({
+      error: "enter all the required fields",
+    });
+  }
+
+  const organizationId = 1;
+
+  res.status(200).send({
+    message: "organization created",
+    data: organizationId, //replace this with organization ID
+  });
+
+  return;
 });
 
 application.post("/create-event", (req, res) => {
@@ -203,24 +416,14 @@ application.post("/create-event", (req, res) => {
 
   //put it into the database here:
 
+  const eventId = 1;
+
   res.status(200).send({
     message: "event created",
-    data: "event_data", //replace this with data about the event
+    data: eventId, //replace this with event ID
   });
 
   return;
-});
-
-application.post("/organizations", (req, res) => {
-  const userId = req.body.userId;
-
-  res.status(200).send({
-    data: organizations,
-  });
-
-  const organization = organizations.find(
-    (organization) => organization.id == userId
-  );
 });
 
 connection.end();
