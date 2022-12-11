@@ -1,7 +1,23 @@
-# HackThe6ix Event Platform
-## Description
-This is a submission to [Hack the 6ix 2022](https://hackthe6ix2022.devpost.com/). We set out to build an Event Platform that accomplishes great things.
+<div align="center">
+  <a href="https://github.com/KirillTregubov/Centipede">
+    <img src="images/screenshot.jpg" alt="Screenshot of the Centipede game" width="225" height="487.2">
+  </a>
+  <h3 align="center">Eventure</h3>
 
+  <p align="center">
+    A next-generation Event Platform. Submitted to <a href="https://hackthe6ix2022.devpost.com/">Hack the 6ix 2022</a>.
+    <br />
+    <a href="https://github.com/KirillTregubov/hackthe6ix/issues">Report a Bug</a>
+  </p>
+</div>
+
+## Roles
+
+Platform/Frontend Developer: [@KirillTregubov](https://www.github.com/KirillTregubov)
+
+Backend/Server Developers: [@SoumilDharaskar](https://www.github.com/SoumilDharaskar) [@KaranpreetRaja](https://www.github.com/KaranpreetRaja) [@whyismynamerudy](https://www.github.com/whyismynamerudy) 
+
+<!--
 ## How to use the app
 Since we cannot afford to pay our tech overlords for signing/publishing certificates, you can use our application by:
 1. Installing the [Expo Go](https://expo.dev/client) app.
@@ -10,7 +26,6 @@ Since we cannot afford to pay our tech overlords for signing/publishing certific
   <div align="center">
     <img style='width: 30%' src="images/expo-go.svg" alt="QR Code"></img>
   </div>
-<!--
 2. Sign in to the Expo app with the following credentials.
     ```
     Username: 

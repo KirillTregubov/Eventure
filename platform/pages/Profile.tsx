@@ -1,20 +1,27 @@
 import { StackNavigationProp } from '@react-navigation/stack'
-import { useLayoutEffect } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import {
+  Alert,
   Button,
   Image,
+  Keyboard,
   Platform,
   ScrollView,
+  StyleSheet,
   Text,
+  TextInput,
   TouchableHighlight,
   useColorScheme,
   View
 } from 'react-native'
+import Modal from 'react-native-modal'
 import { CogIcon } from 'react-native-heroicons/outline'
 import { PlusIcon } from 'react-native-heroicons/solid'
 
 import { NavigationParams } from '../lib/Navigation'
 import Styles from '../lib/Styles'
+import { User } from '../lib/DataTypes'
+import { UserData } from '../lib/Data'
 
 function OrganizationCard({
   organization,
@@ -63,11 +70,219 @@ function OrganizationCard({
   )
 }
 
+// import { Form, Modal } from 'react-native-form-component'
+
+function CreateOrganizationModal({
+  userData,
+  show,
+  setShow,
+  navigation
+}: {
+  userData: User
+  show: boolean
+  setShow: (show: boolean) => void
+  navigation: StackNavigationProp<NavigationParams>
+}): JSX.Element {
+  const [organizationName, setOrganizationName] = useState('')
+  const scheme = useColorScheme()
+
+  const submit = () => {
+    if (organizationName.length == 0) {
+      Alert.alert('Error', 'Cannot create an organization with an empty name!')
+      return
+    }
+
+    // post organization
+    console.log('Post organization')
+    // navigation.navigate('OrganizationPage', { name: organizationName })
+  }
+
+  return (
+    <Modal
+      // presentationStyle="overFullScreen"
+      // animationType="slide"
+      // transparent={true}
+      isVisible={show}
+      avoidKeyboard={true}
+      onBackdropPress={() => {
+        Keyboard.dismiss()
+        setShow(false)
+      }}
+      style={{
+        justifyContent: 'flex-end',
+        paddingBottom: 8
+      }}
+      // onRequestClose={() => {
+      //   Alert.alert('Modal has been closed.')
+      //   setShow(!show)
+      // }}
+    >
+      <View
+        style={
+          {
+            // absolute: 'true',
+            // bottom: 0,
+            // display: 'flex',
+            // height: '100%'
+            // justifyContent: 'flex-end',
+            // bottom: -500
+          }
+        }>
+        <View
+          style={[
+            styles.modalView,
+            {
+              justifyContent: 'flex-end',
+              backgroundColor:
+                scheme === 'dark'
+                  ? Styles.colors.neutral['900']
+                  : Styles.colors.neutral['100']
+            }
+          ]}>
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: '600',
+              marginBottom: 12,
+              color: scheme === 'dark' ? 'white' : 'black'
+            }}>
+            Create an Organization
+          </Text>
+          <Text
+            style={{
+              fontSize: 13,
+              color: scheme === 'dark' ? 'white' : 'black'
+            }}>
+            Organization Name
+          </Text>
+          <TextInput
+            placeholderTextColor={
+              scheme === 'dark'
+                ? Styles.colors.neutral['500']
+                : Styles.colors.neutral['400']
+            }
+            style={{
+              color:
+                scheme === 'dark'
+                  ? Styles.colors.neutral['300']
+                  : Styles.colors.neutral['800'],
+              backgroundColor:
+                scheme === 'dark'
+                  ? Styles.colors.neutral['700']
+                  : Styles.colors.neutral['200'],
+              borderColor:
+                scheme === 'dark'
+                  ? Styles.colors.neutral['500']
+                  : Styles.colors.neutral['400'],
+              height: 40,
+              marginVertical: 6,
+              borderWidth: 1,
+              paddingHorizontal: 8,
+              borderRadius: Styles.borderRadius.input
+            }}
+            clearButtonMode={'while-editing'}
+            returnKeyType={'done'}
+            onChangeText={setOrganizationName}
+            onSubmitEditing={() => submit()}
+            value={organizationName}
+            placeholder={`${userData?.firstName}'s Organization`}
+          />
+
+          <TouchableHighlight
+            onPress={() => submit()}
+            underlayColor={
+              scheme === 'dark'
+                ? Styles.colors.indigo['600']
+                : Styles.colors.indigo['500']
+            }
+            style={{
+              marginTop: 8,
+              elevation: 4,
+              backgroundColor:
+                scheme === 'dark'
+                  ? Styles.colors.indigo['900']
+                  : Styles.colors.indigo['300'],
+              borderRadius: 10,
+              padding: 10
+            }}>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
+              <PlusIcon
+                style={{ marginRight: 3 }}
+                size={14}
+                color={
+                  scheme === 'dark'
+                    ? Styles.colors.indigo['200']
+                    : Styles.colors.indigo['900']
+                }
+              />
+              <Text
+                style={{
+                  textAlign: 'center',
+                  fontSize: 15,
+                  fontWeight: '600',
+                  color:
+                    scheme === 'dark'
+                      ? Styles.colors.indigo['200']
+                      : Styles.colors.indigo['900']
+                }}>
+                Create Organization
+              </Text>
+            </View>
+          </TouchableHighlight>
+        </View>
+      </View>
+    </Modal>
+  )
+}
+
+const styles = StyleSheet.create({
+  modalView: {
+    borderRadius: 12,
+    padding: 22,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF'
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3'
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center'
+  }
+})
+
 type ProfileProps = {
   navigation: StackNavigationProp<NavigationParams, 'Profile'>
 }
 
 export default function Profile({ navigation }: ProfileProps) {
+  const [show, setShow] = useState(false)
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => {
@@ -91,20 +306,22 @@ export default function Profile({ navigation }: ProfileProps) {
 
   const scheme = useColorScheme()
 
-  const userData = {
-    firstName: 'John',
-    lastName: 'Doe',
-    username: 'johndoe',
-    organizations: [
-      // {
-      //   name: 'My Cool Organization'
-      // },
-      // {
-      //   name: 'NOTLIVEROCK'
-      // },
-      // { name: 'Family Get-togethers' }
-    ]
-  }
+  // const userData = {
+  //   firstName: 'John',
+  //   lastName: 'Doe',
+  //   username: 'johndoe',
+  //   organizations: [
+  //     {
+  //       name: 'My Cool Organization'
+  //     },
+  //     {
+  //       name: 'NOTLIVEROCK'
+  //     },
+  //     { name: 'Family Get-togethers' }
+  //   ]
+  // }
+
+  const userData = UserData
 
   return (
     <View
@@ -113,7 +330,7 @@ export default function Profile({ navigation }: ProfileProps) {
         alignItems: 'center',
         justifyContent: 'center'
       }}>
-      <View style={{ paddingTop: 12, height: 365 }}>
+      <View style={{ paddingTop: Styles.paddingTop.container, height: 365 }}>
         <View
           style={{
             flex: 1,
@@ -205,7 +422,7 @@ export default function Profile({ navigation }: ProfileProps) {
             <View
               style={{
                 paddingTop: 16,
-                paddingHorizontal: 18
+                paddingHorizontal: Styles.paddingHorizontal.container
               }}>
               <Text
                 style={{
@@ -222,9 +439,8 @@ export default function Profile({ navigation }: ProfileProps) {
                 No worries, making one is free!
               </Text>
               <TouchableHighlight
-                onPress={() =>
-                  navigation.navigate('EventPage', { name: 'My Awesome Event' })
-                }
+                onPress={() => setShow(true)}
+                // navigation.navigate('CreateOrganization')
                 underlayColor={
                   scheme === 'dark'
                     ? Styles.colors.indigo['600']
@@ -248,7 +464,7 @@ export default function Profile({ navigation }: ProfileProps) {
                     alignItems: 'center'
                   }}>
                   <PlusIcon
-                    style={{ marginRight: 2 }}
+                    style={{ marginRight: 3 }}
                     size={14}
                     color={
                       scheme === 'dark'
@@ -311,6 +527,12 @@ export default function Profile({ navigation }: ProfileProps) {
           </>
         )}
       </View>
+      <CreateOrganizationModal
+        userData={userData}
+        show={show}
+        setShow={setShow}
+        navigation={navigation}
+      />
     </View>
   )
 }

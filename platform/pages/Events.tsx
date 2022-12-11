@@ -1,74 +1,11 @@
 import { StackNavigationProp } from '@react-navigation/stack'
-import {
-  ScrollView,
-  Text,
-  TouchableHighlight,
-  useColorScheme,
-  View
-} from 'react-native'
+import { ScrollView, Text, useColorScheme, View } from 'react-native'
 import { ChevronRightIcon } from 'react-native-heroicons/outline'
 
 import { NavigationParams } from '../lib/Navigation'
 import Styles from '../lib/Styles'
-
-function EventCard({
-  navigation
-}: {
-  navigation: StackNavigationProp<NavigationParams>
-}): JSX.Element {
-  const scheme = useColorScheme()
-
-  return (
-    <View
-      style={{
-        width: '50%',
-        height: 120,
-        padding: 4
-      }}>
-      <TouchableHighlight
-        onPress={() =>
-          navigation.navigate('EventPage', { name: 'My Awesome Event' })
-        }
-        underlayColor={
-          scheme === 'dark'
-            ? Styles.colors.neutral['600']
-            : Styles.colors.neutral['500']
-        }
-        style={{
-          backgroundColor:
-            scheme === 'dark'
-              ? Styles.colors.neutral['800']
-              : Styles.colors.neutral['200'],
-          width: '100%',
-          height: '100%',
-          borderRadius: 8,
-          padding: 6,
-          paddingHorizontal: 8,
-          elevation: 3
-        }}>
-        <View style={{ flex: 1 }}>
-          <Text
-            style={{
-              fontSize: 12,
-              marginTop: 'auto',
-              color: scheme === 'dark' ? '#737373' : 'black'
-            }}>
-            25 - 27 July, 2022
-          </Text>
-          <Text
-            style={{
-              fontSize: 15,
-              fontWeight: '900',
-              color: scheme === 'dark' ? 'white' : 'black'
-              // consider using 'white' with image
-            }}>
-            Event Name
-          </Text>
-        </View>
-      </TouchableHighlight>
-    </View>
-  )
-}
+import EventCard from '../components/EventCard'
+import { AllEvents, SampleEvent, UserData } from '../lib/Data'
 
 const HomeScreen = ({
   navigation
@@ -77,16 +14,15 @@ const HomeScreen = ({
 }) => {
   const scheme = useColorScheme()
 
-  const userData = {
-    firstName: 'John',
-    availablePrizes: {
-      amount: 1,
-      organization: 'LIVEROCK ENT'
-    },
-    rsvpEvents: []
-  }
-
-  const allEvents = []
+  // const userData = {
+  //   firstName: 'John',
+  //   availablePrizes: {
+  //     amount: 1,
+  //     organization: 'LIVEROCK ENT'
+  //   },
+  //   rsvpEvents: []
+  // }
+  const userData = UserData
 
   return (
     <ScrollView
@@ -146,7 +82,7 @@ const HomeScreen = ({
             You have {userData.availablePrizes.amount} prize available from{' '}
             {userData.availablePrizes.organization}.{' '}
           </Text>
-          <ChevronRightIcon
+          {/* <ChevronRightIcon
             style={{ position: 'absolute', right: 5, top: '50%' }}
             size={14}
             color={
@@ -154,7 +90,7 @@ const HomeScreen = ({
                 ? Styles.colors.indigo['300']
                 : Styles.colors.indigo['700']
             }
-          />
+          /> */}
         </View>
       </View>
       <View style={{ paddingHorizontal: 18 }}>
@@ -178,8 +114,8 @@ const HomeScreen = ({
           paddingHorizontal: 14,
           paddingBottom: 20
         }}>
-        {[...Array(2)].map((e, i) => (
-          <EventCard navigation={navigation} key={i} />
+        {userData.rsvpEvents.map((e, i) => (
+          <EventCard navigation={navigation} event={SampleEvent} key={i} />
         ))}
       </View>
       <View style={{ paddingHorizontal: 18 }}>
@@ -203,8 +139,8 @@ const HomeScreen = ({
           paddingHorizontal: 14,
           paddingBottom: 20
         }}>
-        {[...Array(20)].map((e, i) => (
-          <EventCard navigation={navigation} key={i} />
+        {AllEvents.map((event, index) => (
+          <EventCard navigation={navigation} event={event} key={index} />
         ))}
       </View>
     </ScrollView>

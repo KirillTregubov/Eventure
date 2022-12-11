@@ -46,7 +46,6 @@ export default function QRIndicator() {
   )
 }
 
-// TODO(Bacon): Convert to functional after RN 63 upgrade.
 class SvgComponent extends React.Component<SvgProps> {
   render() {
     return (

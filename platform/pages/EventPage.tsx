@@ -1,5 +1,15 @@
+import { useState } from 'react'
 import { Button, Linking, Text, useColorScheme, View } from 'react-native'
 import { CalendarIcon, ClockIcon } from 'react-native-heroicons/outline'
+import MapView, { Marker } from 'react-native-maps'
+import {
+  AllEvents,
+  CollegeTour,
+  FriendlyEvent,
+  Hackathon,
+  MonthlyBarbecue,
+  SampleEvent
+} from '../lib/Data'
 import Styles from '../lib/Styles'
 
 type EventPageParams = {
@@ -13,49 +23,71 @@ type EventPageParams = {
 export default function EventPage({ route }: EventPageParams) {
   const scheme = useColorScheme()
 
-  // fetch
-  console.log(route.params.name)
+  let eventData = null
 
-  const eventData = {
-    name: 'My Awesome Event',
-    pointsEarned: 20,
-    startDate: '25',
-    endDate: '27 July, 2022',
-    startTime: '1:00 p.m.',
-    endTime: '7:00 p.m.',
-    details: [
-      {
-        name: 'No Drinking Policy',
-        type: 'text',
-        content: 'No drinking on the premises.'
-      },
-      {
-        name: 'Interactive Map',
-        type: 'link',
-        content: 'https://google.com'
-      },
-      {
-        name: 'Our Website',
-        type: 'link',
-        content: 'https://google.com'
-      }
-    ],
-    address: '123 Main St, Anytown, CA 12345'
+  const goal = route.params.name
+  console.log(goal)
+  if (goal === 'Jack Morris Concert') eventData = SampleEvent
+  else if (goal === 'My Friendly Get-Together') eventData = FriendlyEvent
+  else if (goal === 'College Tour') eventData = CollegeTour
+  else if (goal === 'Toronto Hackathon') eventData = Hackathon
+  else if (goal === 'Smith Family August Barbecue') eventData = MonthlyBarbecue
+
+  // const eventData = {
+  //   name: 'My Awesome Event',
+  //   greeting:
+  //     'Welcome to the concert! The artist has a meet-and-greet after the show!',
+  //   pointsEarned: 20,
+  //   startDate: '25',
+  //   endDate: '27 July, 2022',
+  //   startTime: '1:00 p.m.',
+  //   endTime: '7:00 p.m.',
+  //   details: [
+  //     {
+  //       name: 'No Drinking Policy',
+  //       type: 'text',
+  //       content: 'No drinking on the premises.'
+  //     },
+  //     {
+  //       name: 'Interactive Map',
+  //       type: 'link',
+  //       content: 'https://google.com'
+  //     },
+  //     {
+  //       name: 'Our Website',
+  //       type: 'link',
+  //       content: 'https://google.com'
+  //     }
+  //   ],
+  //   address: {
+  //     latitude: 37.78825,
+  //     longitude: -122.4324
+  //   }
+  // }
+
+  if (!eventData) {
+    return <></>
   }
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View
+      style={{
+        paddingTop: Styles.paddingTop.container,
+        paddingHorizontal: Styles.paddingHorizontal.container
+      }}>
       <Text
         style={{
-          fontSize: 18,
+          fontWeight: '700',
+          fontSize: 22,
           paddingBottom: 2,
           color: scheme === 'dark' ? 'white' : 'black'
         }}>
-        Event: {eventData.name}
+        {eventData.name}
       </Text>
       <View
         style={{
-          marginTop: 12,
+          marginVertical: 12,
+          marginBottom: 8,
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center'
@@ -83,7 +115,7 @@ export default function EventPage({ route }: EventPageParams) {
                   ? Styles.colors.neutral['400']
                   : Styles.colors.neutral['500']
             }}>
-            {organizationData.startDate} - {organizationData.endDate}
+            {eventData.startDate} - {eventData.endDate}
           </Text>
         </View>
         <View
@@ -109,15 +141,36 @@ export default function EventPage({ route }: EventPageParams) {
                   ? Styles.colors.neutral['400']
                   : Styles.colors.neutral['500']
             }}>
-            {organizationData.startTime} - {organizationData.endTime}
+            {eventData.startTime} - {eventData.endTime}
           </Text>
         </View>
       </View>
-      <Text style={{ color: scheme === 'dark' ? 'white' : 'black' }}>
-        Welcome to the Event! Enjoy your time here!
+
+      <Text
+        style={{
+          // marginTop: 'auto',
+          marginBottom: 12,
+          fontWeight: '500',
+          color:
+            scheme === 'dark'
+              ? Styles.colors.neutral['400']
+              : Styles.colors.neutral['500']
+          // consider using 'white' with image
+        }}>
+        <Text
+          style={{
+            fontWeight: '800',
+            color:
+              scheme === 'dark'
+                ? Styles.colors.neutral['300']
+                : Styles.colors.neutral['600']
+          }}>
+          {eventData.pointsEarned}
+        </Text>{' '}
+        points earned
       </Text>
       <Text style={{ color: scheme === 'dark' ? 'white' : 'black' }}>
-        Points Earned: {eventData.pointsEarned}
+        {eventData.greeting}
       </Text>
       <Text
         style={{
@@ -167,15 +220,25 @@ export default function EventPage({ route }: EventPageParams) {
         }}>
         Map of Venue
       </Text>
-      <View
+      <MapView
+        region={{
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+          ...eventData.address
+        }}
         style={{
           backgroundColor: scheme === 'dark' ? '#262626' : '#d4d4d4',
-          width: '80%',
-          height: 200,
+          width: '100%',
+          height: 250,
           borderRadius: 8,
           marginTop: 8
-        }}
-      />
+        }}>
+        <Marker
+          coordinate={eventData.address}
+          title={'Event Location'}
+          description={`Location of ${eventData.name}`}
+        />
+      </MapView>
     </View>
   )
 }

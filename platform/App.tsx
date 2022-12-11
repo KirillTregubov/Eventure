@@ -18,7 +18,6 @@ import ScanScreen from './pages/Scan'
 import ProfileScreen from './pages/Profile'
 import EventPage from './pages/EventPage'
 import OrganizationPage from './pages/OrganizationPage'
-import CreateOrganization from './pages/CreateOrganization'
 import CreateEvent from './pages/CreateEvent'
 import Styles from './lib/Styles'
 
@@ -118,10 +117,6 @@ export default function App() {
             options={({ route }) => ({ title: route.params.name })}
           />
           <Stack.Screen name="CreateEvent" component={CreateEvent} />
-          <Stack.Screen
-            name="CreateOrganization"
-            component={CreateOrganization}
-          />
         </Stack.Navigator>
       </NavigationContainer>
 
