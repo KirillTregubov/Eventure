@@ -14,8 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUser = exports.getUsers = void 0;
 const client_1 = require("@prisma/client");
-const prisma_model_1 = __importDefault(require("../models/prisma.model"));
-const exceptions_model_1 = require("../models/exceptions.model");
+const prisma_model_1 = __importDefault(require("models/prisma.model"));
+const exceptions_model_1 = require("models/exceptions.model");
 const getUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield prisma_model_1.default.user.findMany();
     return users;

@@ -5,7 +5,9 @@
   "license": "MIT",
   "scripts": {
     "start": "node dist/index.js",
-    "dev": "ts-node-dev --respawn --pretty --transpile-only -r tsconfig-paths/register src/index.ts",
+    "dev:start": "ts-node-dev --respawn --pretty --transpile-only -r tsconfig-paths/register src/index.ts",
+    "dev:tsc": "tsc -w",
+    "dev": "concurrently --kill-others \"yarn dev:start\" \"yarn dev:tsc\"",
     "build": "tsc && tsc-alias",
     "migrate": "npx prisma migrate dev --name init"
   },
