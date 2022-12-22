@@ -7,6 +7,7 @@ const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
+  console.error(err);
   console.error(JSON.stringify(err));
   if (err && err instanceof HttpException) {
     res.status(err.errorCode).json(err.message);

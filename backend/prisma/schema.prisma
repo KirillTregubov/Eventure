@@ -11,17 +11,23 @@ datasource db {
 }
 
 model User {
-  userId    String @id @default(uuid())
-  username  String @unique
-  firstName String
-  lastName  String
+  userId        String         @id @default(uuid())
+  username      String         @unique
+  firstName     String
+  lastName      String
   // https://www.rfc-editor.org/errata_search.php?rfc=3696&eid=1690
-  email     String @unique @db.VarChar(254)
+  email         String         @unique @db.VarChar(254)
+  attendances   Attendance[]
+  pointCounts   PointCount[]
+  organizations Organization[]
 }
 
 model Organization {
-  organizationId   String @id @default(uuid())
+  organizationId   String       @id @default(uuid())
   organizationName String
+  admins           User[]
+  events           Event[]
+  pointCounts      PointCount[]
 }
 
 enum EventType {
@@ -31,31 +37,56 @@ enum EventType {
 }
 
 model Event {
-  eventId           String    @id @default(uuid())
-  name              String
-  greeting          String    @default("Welcome to the event!")
-  type              EventType
-  maxAttendees      Int
-  price             Float
-  startDate         DateTime  @db.Date
-  endDate           DateTime  @db.Date
-  startTime         DateTime  @db.Timetz
-  endTime           DateTime  @db.Timetz
-  pointsEarned      Int       @default(0)
-  allowUnregistered Boolean   @default(false)
+  eventId           String        @id @default(uuid())
+  eventName         String
+  greeting          String        @default("Welcome to the event!")
+  eventType         EventType
+  maxAttendees      Int?
+  price             Float         @default(0)
+  startDate         DateTime      @db.Date
+  endDate           DateTime      @db.Date
+  startTime         DateTime      @db.Time(0)
+  endTime           DateTime      @db.Time(0)
+  pointsEarned      Int           @default(0)
+  allowUnregistered Boolean       @default(false)
   addressLatitude   Float
   addressLongitude  Float
+  organization      Organization  @relation(fields: [organizationId], references: [organizationId])
+  organizationId    String
+  attendances       Attendance[]
+  details           EventDetail[]
 }
 
-// model Attendance {
-//   attended Boolean @default(false)
-// }
+model Attendance {
+  user     User    @relation(fields: [userId], references: [userId])
+  userId   String
+  event    Event   @relation(fields: [eventId], references: [eventId])
+  eventId  String
+  attended Boolean @default(false)
 
-// model Post {
-//   id        Int     @id @default(autoincrement())
-//   title     String
-//   content   String?
-//   published Boolean @default(false)
-//   author    User    @relation(fields: [authorId], references: [userId])
-//   authorId  Int
-// }
+  @@unique([userId, eventId])
+}
+
+model PointCount {
+  user           User         @relation(fields: [userId], references: [userId])
+  userId         String
+  organization   Organization @relation(fields: [organizationId], references: [organizationId])
+  organizationId String
+  points         Int          @default(0)
+
+  @@unique([userId, organizationId])
+}
+
+enum EventDetailType {
+  TEXT
+  LINK
+}
+
+model EventDetail {
+  detailId   String          @id @default(uuid())
+  detailName String
+  detailType EventDetailType
+  content    String
+  event      Event           @relation(fields: [eventId], references: [eventId])
+  eventId    String
+}

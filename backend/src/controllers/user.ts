@@ -9,6 +9,7 @@ export const getUsers = async () => {
 
 export const createUser = async () => {
   try {
+    // read in input from request body
     const user = await prisma.user.create({
       data: {
         username: "Alice",
