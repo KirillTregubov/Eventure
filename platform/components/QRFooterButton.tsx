@@ -1,10 +1,8 @@
-// note(bacon): Purposefully skip using the themed icons since we want the icons to change color based on toggle state.
-// import Ionicons from '@expo/vector-icons/build/Ionicons'
 import { BlurView } from 'expo-blur'
 import * as Haptics from 'expo-haptics'
 import React, { useCallback } from 'react'
 import { StyleSheet, useColorScheme } from 'react-native'
-import { LightningBoltIcon, XIcon } from 'react-native-heroicons/outline'
+import { BoltIcon, BoltSlashIcon } from 'react-native-heroicons/solid'
 // @ts-expect-error Bug
 import TouchableBounce from 'react-native/Libraries/Components/Touchable/TouchableBounce'
 
@@ -43,7 +41,11 @@ export default function QRFooterButton({
       onPressIn={onPressIn}
       onPress={onPressButton}>
       <BlurView intensity={intensity} style={styles.container} tint={tint}>
-        <LightningBoltIcon size={iconSize} color={iconColor} />
+        {isActive ? (
+          <BoltIcon size={iconSize} color={'#FFD50B'} />
+        ) : (
+          <BoltSlashIcon size={iconSize} color={iconColor} />
+        )}
       </BlurView>
     </TouchableBounce>
   )
