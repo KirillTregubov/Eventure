@@ -10,13 +10,14 @@ import {
   Button,
   Alert
 } from 'react-native'
-import { FloatingLabelInput } from 'react-native-floating-label-input'
+// import { FloatingLabelInput } from 'react-native-floating-label-input'
 import { CalendarIcon, PlusIcon } from 'react-native-heroicons/solid'
 
 import Styles from '../lib/Styles'
-import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
+import DateTimePicker, {
+  DateTimePickerAndroid
+} from '@react-native-community/datetimepicker'
 // import DatePicker from 'react-native-date-picker'
-import DateTimePicker from '@react-native-community/datetimepicker'
 
 export default function CreateEvent() {
   const scheme = useColorScheme()
