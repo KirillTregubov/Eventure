@@ -1,17 +1,11 @@
-import { useCallback, useEffect, useReducer, useState } from 'react'
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-  ViewStyle
-} from 'react-native'
+import { useCallback, useEffect, useState } from 'react'
+import { Platform, StyleSheet, Text, useColorScheme, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { BarCodeScanner } from 'expo-barcode-scanner'
 import { Camera, FlashMode } from 'expo-camera'
 import { BlurView } from 'expo-blur'
 import { StackNavigationProp } from '@react-navigation/stack'
+import { useIsFocused } from '@react-navigation/native'
 
 import { NavigationParams } from '../lib/Navigation'
 import QRIndicator from '../components/QRIndicator'
@@ -52,13 +46,13 @@ type ScanProps = {
 
 export default function Scan({ navigation }: ScanProps) {
   const scheme = useColorScheme()
+  const isFocused = useIsFocused()
   const [isVisible, setIsVisible] = useState(Platform.OS === 'ios')
-  const [scanned, setScanned] = useState(false)
-  const [hasPermission, setHasPermission] = useState(false)
-  const [isLit, setLit] = useState(false)
+  const [hasPermission, setHasPermission] = useState(null)
+  const [flashEnabled, setFlashEnabled] = useState(false)
   const { top, bottom } = useSafeAreaInsets()
 
-  if (!isVisible && !scanned) {
+  if (!isVisible) {
     if (Platform.OS === 'android') {
       setTimeout(() => {
         setIsVisible(true)
@@ -77,32 +71,13 @@ export default function Scan({ navigation }: ScanProps) {
     getBarCodeScannerPermissions()
   }, [])
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      setScanned(false)
-      setIsVisible(false)
-    })
-
-    return unsubscribe
-  }, [navigation])
-
   const handleBarCodeScanned = ({ data: url }: { data: string }) => {
-    console.log(url)
-    setScanned(true)
-    setIsVisible(false)
+    console.log('scanned', url)
     navigation.navigate('EventPage', { name: 'My Awesome Event' })
   }
 
-  // const onCancel = useCallback(() => {
-  //   if (Platform.OS === 'ios') {
-  //     navigation.pop()
-  //   } else {
-  //     navigation.goBack()
-  //   }
-  // }, [])
-
   const onFlashToggle = useCallback(() => {
-    setLit((isLit) => !isLit)
+    setFlashEnabled((flashEnabled) => !flashEnabled)
   }, [])
 
   if (hasPermission === null) {
@@ -156,14 +131,14 @@ export default function Scan({ navigation }: ScanProps) {
           alignItems: 'center',
           width: '100%'
         }}>
-        {isVisible ? (
+        {isFocused ? (
           <Camera
             barCodeScannerSettings={{
               barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
             }}
-            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+            onBarCodeScanned={handleBarCodeScanned}
             style={StyleSheet.absoluteFill}
-            flashMode={isLit ? FlashMode.torch : FlashMode.off}
+            flashMode={flashEnabled ? FlashMode.torch : FlashMode.off}
           />
         ) : null}
 
@@ -174,7 +149,7 @@ export default function Scan({ navigation }: ScanProps) {
             right: 0,
             paddingHorizontal: '7%'
           }}>
-          <QRFooterButton onPress={onFlashToggle} isActive={isLit} />
+          <QRFooterButton onPress={onFlashToggle} isActive={flashEnabled} />
         </View>
 
         <QRIndicator />
