@@ -7,9 +7,8 @@ export const createEvent = async (
   req: FastifyRequest
 ) => {
   try {
+    console.log(req.body)
     // TODO: zero out seconds and milliseconds for start and end time
-
-    // req.body.name
 
     const event = await prisma.event.create({
       data: {

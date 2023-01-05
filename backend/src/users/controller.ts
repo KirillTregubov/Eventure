@@ -12,7 +12,7 @@ export const createUser = async (prisma: PrismaClient, req: FastifyRequest) => {
     console.log(req.body)
     // const { username, firstName, lastName, email } = req.body
 
-    const user = { cool: 'cool' }
+    const user = { todo: true }
     // const user = await prisma.user.create({
     //   data: {
     //     username,

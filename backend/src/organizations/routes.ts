@@ -1,10 +1,11 @@
 import { FastifyInstance, RegisterOptions } from 'fastify'
-import { getOrganizations, createOrganization } from 'controllers/organization'
+import { getOrganizations, createOrganization } from './controller'
+import { DoneFunction } from '../lib/types'
 
 export default function (
   fastify: FastifyInstance,
   opts: RegisterOptions,
-  done: (err?: Error) => void
+  done: DoneFunction
 ) {
   fastify.get(
     '/',

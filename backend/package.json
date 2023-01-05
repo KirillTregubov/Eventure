@@ -9,8 +9,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "lint": "eslint --ext .ts src",
-    "lint:fix": "yarn lint --fix",
+    "lint": "eslint --ext .ts src --fix",
     "start": "node dist/index.js",
     "dev:start": "ts-node-dev --respawn --pretty --transpile-only -r tsconfig-paths/register src/index.ts",
     "dev:tsc": "tsc -w",

@@ -1,10 +1,11 @@
 import { FastifyInstance, RegisterOptions } from 'fastify'
-import { getUsers, createUser } from 'controllers/user'
+import { getUsers, createUser } from './controller'
+import { DoneFunction } from '../lib/types'
 
 export default function (
   fastify: FastifyInstance,
   opts: RegisterOptions,
-  done: (err?: Error) => void
+  done: DoneFunction
 ) {
   fastify.get(
     '/',

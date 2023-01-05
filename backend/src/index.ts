@@ -12,7 +12,7 @@ import swaggerUi from '@fastify/swagger-ui'
 import { PrismaClient } from '@prisma/client'
 import { version, repository } from '../package.json'
 // import prisma from "models/prisma.model";
-import routes from 'routes/routes'
+import routes from 'routes'
 import errorHandler from 'lib/handlers'
 
 // main()
@@ -74,45 +74,8 @@ fastify.register(
   withRefResolver({
     routePrefix: '/docs',
     exposeRoute: true,
-    // swagger: {
-    //   info: {
-    //     title: 'Test swagger',
-    //     description: 'Testing the Fastify swagger API',
-    //     version
-    //   },
-    //   externalDocs: {
-    //     url: 'https://swagger.io',
-    //     description: 'Find more info here'
-    //   },
-    //   host: 'localhost:3000',
-    //   // schemes: ['https'],
-    //   consumes: ['application/json'],
-    //   produces: ['application/json'],
-    //   tags: [
-    //     { name: 'Users', description: '' },
-    //     { name: 'code', description: 'Code related end-points' }
-    //   ]
-    //   // definitions: {
-    //   //   User: {
-    //   //     type: 'object',
-    //   //     required: ['id', 'email'],
-    //   //     properties: {
-    //   //       id: { type: 'string', format: 'uuid' },
-    //   //       firstName: { type: 'string' },
-    //   //       lastName: { type: 'string' },
-    //   //       email: { type: 'string', format: 'email' }
-    //   //     }
-    //   //   }
-    //   // },
-    //   // securityDefinitions: {
-    //   //   apiKey: {
-    //   //     type: 'apiKey',
-    //   //     name: 'apiKey',
-    //   //     in: 'header'
-    //   //   }
-    //   // }
-    // }
-    // staticCSP: true,
+    staticCSP: true,
+    // Docs: https://swagger.io/specification/#openapi-object
     openapi: {
       info: {
         title: 'Eventure API',
@@ -126,10 +89,6 @@ fastify.register(
         url: repository.url,
         description: 'Open the GitHub repo'
       },
-      // host: 'localhost:3000',
-      // schemes: ['https'],
-      // consumes: ['application/json'],
-      // produces: ['application/json'],
       tags: [
         { name: 'Users', description: 'User related endpoints' },
         { name: 'Events', description: 'Event related endpoints' },
@@ -140,9 +99,6 @@ fastify.register(
 )
 fastify.register(swaggerUi, {
   routePrefix: '/docs'
-  // swagger: {
-  //   url: '/docs/swagger.json'
-  // }
 })
 fastify.register(routes, { prefix: '/api/v1' })
 fastify.setErrorHandler(errorHandler)
@@ -153,5 +109,6 @@ fastify.listen(
   () => {
     console.log(`Backend listening on port ${port}!`)
     fastify.swagger()
+    console.log(`Documentation available at http://localhost:${port}/docs`)
   }
 )

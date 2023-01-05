@@ -12,7 +12,7 @@ export const createOrganization = async (
   req: FastifyRequest
 ) => {
   try {
-    // req.body.name
+    console.log(req.body)
     // mandate that this is called by a user
 
     const organization = await prisma.organization.create({
