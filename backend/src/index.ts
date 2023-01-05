@@ -14,9 +14,8 @@ import { PrismaClient } from '@prisma/client'
 import { version, repository } from '../package.json'
 import routes from 'routes'
 import errorHandler from 'lib/handlers'
-import { sharedSchemas } from 'schemas'
-import { userSchemas } from 'users/schemas'
 import { DoneFunction } from 'lib/types'
+import schemas from 'schemas'
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -52,9 +51,9 @@ fastify.register(
     }
   )
 )
-for (const schema of [...userSchemas, ...sharedSchemas]) {
+schemas.forEach((schema) => {
   fastify.addSchema(schema)
-}
+})
 fastify.register(
   swagger,
   withRefResolver({

@@ -1,23 +1,23 @@
-import { FastifyRequest } from 'fastify'
 import { Prisma, PrismaClient } from '@prisma/client'
 import { UniqueConstraintException } from 'lib/exceptions'
+import { CreateOrganizationBody } from './schemas'
 
 export const getOrganizations = async (prisma: PrismaClient) => {
   const organizations = await prisma.organization.findMany()
   return organizations
 }
 
+// TODO: getOrganizationById, getOrganizationsByUser
+
 export const createOrganization = async (
   prisma: PrismaClient,
-  req: FastifyRequest
+  body: CreateOrganizationBody
 ) => {
   try {
-    console.log(req.body)
-    // mandate that this is called by a user
-
+    // TODO: mandate that this is called by a user
     const organization = await prisma.organization.create({
       data: {
-        organizationName: 'Organization 1',
+        organizationName: body.organizationName,
         admins: {
           connect: {
             userId: '12da9d6b-0662-46c3-aec8-ab10067dfbe5' // 5
@@ -30,7 +30,7 @@ export const createOrganization = async (
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === 'P2002') {
         if ((error.meta?.target as string[]).includes('organizationName')) {
-          throw new UniqueConstraintException('Organization Name taken')
+          throw new UniqueConstraintException('Organization name taken')
         }
       }
     }

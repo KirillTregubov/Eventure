@@ -2,7 +2,7 @@ import { FastifyInstance, RegisterOptions, FastifyRequest } from 'fastify'
 import { getUsers, createUser } from './controller'
 import { DoneFunction } from 'lib/types'
 import { $ref, CreateUserBody } from './schemas'
-import { $sharedRef } from 'schemas'
+import { $sharedRef } from 'lib/schemas'
 
 export default function (
   fastify: FastifyInstance,
@@ -43,9 +43,13 @@ export default function (
         response: {
           200: {
             ...$ref('CreateUserResponse'),
-            description: 'User Created'
+            description: 'User created'
           },
-          400: { ...$sharedRef('BadRequest'), description: 'Bad Request' }
+          400: { ...$sharedRef('BadRequest'), description: 'Bad Request' },
+          500: {
+            ...$sharedRef('InternalServerError'),
+            description: 'Internal Server Error'
+          }
         }
       }
     },

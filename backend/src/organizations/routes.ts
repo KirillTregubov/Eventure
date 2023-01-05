@@ -1,6 +1,8 @@
-import { FastifyInstance, RegisterOptions } from 'fastify'
+import { FastifyInstance, FastifyRequest, RegisterOptions } from 'fastify'
 import { getOrganizations, createOrganization } from './controller'
 import { DoneFunction } from '../lib/types'
+import { $ref, CreateOrganizationBody } from './schemas'
+import { $sharedRef } from 'lib/schemas'
 
 export default function (
   fastify: FastifyInstance,
@@ -12,7 +14,17 @@ export default function (
     {
       schema: {
         tags: ['Organizations'],
-        summary: 'Get all organizations'
+        summary: 'Get all organizations',
+        response: {
+          200: {
+            ...$ref('GetOrganizationsResponse'),
+            description: 'List of organizations'
+          },
+          500: {
+            ...$sharedRef('InternalServerError'),
+            description: 'Internal Server Error'
+          }
+        }
       }
     },
     async (req, reply) => {
@@ -26,11 +38,23 @@ export default function (
     {
       schema: {
         tags: ['Organizations'],
-        summary: 'Create an organization'
+        summary: 'Create an organization',
+        body: $ref('CreateOrganizationBody'),
+        response: {
+          200: {
+            ...$ref('CreateOrganizationResponse'),
+            description: 'Organization created'
+          },
+          400: { ...$sharedRef('BadRequest'), description: 'Bad Request' },
+          500: {
+            ...$sharedRef('InternalServerError'),
+            description: 'Internal Server Error'
+          }
+        }
       }
     },
-    async (req, reply) => {
-      const event = await createOrganization(fastify.prisma, req)
+    async (req: FastifyRequest<{ Body: CreateOrganizationBody }>, reply) => {
+      const event = await createOrganization(fastify.prisma, req.body)
       reply.send(event)
     }
   )
