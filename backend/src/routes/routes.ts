@@ -1,8 +1,17 @@
-import { Router } from "express";
-import userRoutes from "./user";
-import eventRoutes from "./event";
-import organizationRoutes from "./organization";
+import { FastifyInstance, RegisterOptions } from 'fastify'
+import userRoutes from './users'
+import eventRoutes from './events'
+import organizationRoutes from './organizations'
 
-const api = Router().use(userRoutes).use(eventRoutes).use(organizationRoutes);
-
-export default Router().use("/api/v1", api);
+export default function (
+  fastify: FastifyInstance,
+  opts: RegisterOptions,
+  done: (err?: Error) => void
+) {
+  fastify.register(userRoutes, {
+    prefix: '/users'
+  })
+  fastify.register(eventRoutes, { prefix: '/events' })
+  fastify.register(organizationRoutes, { prefix: '/organizations' })
+  done()
+}

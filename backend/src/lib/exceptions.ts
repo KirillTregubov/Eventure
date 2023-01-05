@@ -1,7 +1,7 @@
 export class HttpException extends Error {
   errorCode: number;
 
-  constructor(errorCode: number, public readonly message: string | any) {
+  constructor(errorCode: number, public readonly message: string) {
     super(message);
     this.name = this.constructor.name;
     this.errorCode = errorCode;
@@ -9,7 +9,7 @@ export class HttpException extends Error {
 }
 
 export class UniqueConstraintException extends HttpException {
-  constructor(message: string | any) {
-    super(409, message);
+  constructor(public readonly message: string) {
+    super(400, message);
   }
 }

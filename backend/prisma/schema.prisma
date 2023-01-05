@@ -24,7 +24,7 @@ model User {
 
 model Organization {
   organizationId   String       @id @default(uuid())
-  organizationName String
+  organizationName String       @unique
   admins           User[]
   events           Event[]
   pointCounts      PointCount[]

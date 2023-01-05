@@ -1,34 +1,37 @@
-import { Prisma } from "@prisma/client";
-import prisma from "models/prisma.model";
-import { UniqueConstraintException } from "models/exceptions.model";
+import { FastifyRequest } from 'fastify'
+import { Prisma, PrismaClient } from '@prisma/client'
+import { UniqueConstraintException } from 'lib/exceptions'
 
-export const getUsers = async () => {
-  const users = await prisma.user.findMany();
-  return users;
-};
+export const getUsers = async (prisma: PrismaClient) => {
+  const users = await prisma.user.findMany()
+  return users
+}
 
-export const createUser = async () => {
+export const createUser = async (prisma: PrismaClient, req: FastifyRequest) => {
   try {
-    // read in input from request body
-    const user = await prisma.user.create({
-      data: {
-        username: "Alice",
-        firstName: "Alice",
-        lastName: "Doe",
-        email: "email@email.com",
-      },
-    });
-    return user;
+    console.log(req.body)
+    // const { username, firstName, lastName, email } = req.body
+
+    const user = { cool: 'cool' }
+    // const user = await prisma.user.create({
+    //   data: {
+    //     username,
+    //     firstName,
+    //     lastName,
+    //     email
+    //   }
+    // })
+    return user
   } catch (error: unknown) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        if ((error.meta?.target as String[]).includes("username")) {
-          throw new UniqueConstraintException("Username taken");
-        } else if ((error.meta?.target as String[]).includes("email")) {
-          throw new UniqueConstraintException("Email already in use");
+      if (error.code === 'P2002') {
+        if ((error.meta?.target as string[]).includes('username')) {
+          throw new UniqueConstraintException('Username taken')
+        } else if ((error.meta?.target as string[]).includes('email')) {
+          throw new UniqueConstraintException('Email already in use')
         }
       }
     }
-    throw error;
+    throw error
   }
-};
+}
