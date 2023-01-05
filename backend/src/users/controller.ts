@@ -1,26 +1,36 @@
-import { FastifyRequest } from 'fastify'
 import { Prisma, PrismaClient } from '@prisma/client'
 import { UniqueConstraintException } from 'lib/exceptions'
+import { CreateUserBody } from './schemas'
 
 export const getUsers = async (prisma: PrismaClient) => {
   const users = await prisma.user.findMany()
   return users
 }
 
-export const createUser = async (prisma: PrismaClient, req: FastifyRequest) => {
-  try {
-    console.log(req.body)
-    // const { username, firstName, lastName, email } = req.body
+// const user = {
+//   email: z
+//     .string({
+//       required_error: 'Email is required',
+//       invalid_type_error: 'Email must be a string'
+//     })
+//     .email(),
+//   name: z.string()
+// }
 
-    const user = { todo: true }
-    // const user = await prisma.user.create({
-    //   data: {
-    //     username,
-    //     firstName,
-    //     lastName,
-    //     email
-    //   }
-    // })
+export const createUser = async (
+  prisma: PrismaClient,
+  body: CreateUserBody
+) => {
+  try {
+    const { username, firstName, lastName, email } = body
+    const user = await prisma.user.create({
+      data: {
+        username,
+        firstName,
+        lastName,
+        email
+      }
+    })
     return user
   } catch (error: unknown) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
