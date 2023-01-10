@@ -9,7 +9,7 @@ const errorHandler = (
 ) => {
   console.error(JSON.stringify(err))
   if (err && err instanceof HttpException) {
-    console.log('custom err')
+    console.log('detected as custom error')
     reply.status(err.errorCode).send(err)
   } else if (
     err &&

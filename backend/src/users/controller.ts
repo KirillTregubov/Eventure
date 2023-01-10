@@ -31,6 +31,7 @@ export const createUser = async (
         email
       }
     })
+    console.log(user)
     return user
   } catch (error: unknown) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
