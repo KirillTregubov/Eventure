@@ -7,6 +7,16 @@ export const getUsers = async (prisma: PrismaClient) => {
   return users
 }
 
+export const getUser = async (prisma: PrismaClient, userId: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      userId: userId,
+    },
+  })
+  console.log(user)
+  return user
+}
+
 // const user = {
 //   email: z
 //     .string({

@@ -1,7 +1,7 @@
 import { FastifyInstance, RegisterOptions, FastifyRequest } from 'fastify'
-import { getUsers, createUser } from './controller'
+import { getUsers, createUser, getUser } from './controller'
 import { DoneFunction } from 'lib/types'
-import { $ref, CreateUserBody } from './schemas'
+import { $ref, CreateUserBody, GetUserParams } from './schemas'
 import { $sharedRef } from 'lib/schemas'
 
 export default function (
@@ -29,6 +29,35 @@ export default function (
     },
     async (req, reply) => {
       const users = await getUsers(fastify.prisma)
+      reply.send(users)
+    }
+  )
+
+  fastify.get(
+    '/:userId',
+    {
+      schema: {
+        tags: ['Users'],
+        summary: 'Get user by ID',
+        params: 
+          {
+            ...$ref('GetUserParams'),
+            description: 'The ID of the user'
+          },
+        response: {
+           200: {
+            ...$ref('GetUserResponse'),
+            description: 'One user'
+          },
+          500: {
+            ...$sharedRef('InternalServerError'),
+            description: 'Internal Server Error'
+          }
+        }
+      }
+    },
+    async (req:FastifyRequest<{Params: GetUserParams}>, reply) => {
+      const users = await getUser(fastify.prisma, req.params?.userId)
       reply.send(users)
     }
   )
