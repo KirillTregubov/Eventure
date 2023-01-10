@@ -10,22 +10,11 @@ export const getUsers = async (prisma: PrismaClient) => {
 export const getUser = async (prisma: PrismaClient, userId: string) => {
   const user = await prisma.user.findUnique({
     where: {
-      userId: userId,
-    },
+      userId: userId
+    }
   })
-  console.log(user)
   return user
 }
-
-// const user = {
-//   email: z
-//     .string({
-//       required_error: 'Email is required',
-//       invalid_type_error: 'Email must be a string'
-//     })
-//     .email(),
-//   name: z.string()
-// }
 
 export const createUser = async (
   prisma: PrismaClient,
