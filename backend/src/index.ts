@@ -39,7 +39,12 @@ fastify.register(
       done: DoneFunction
     ) => {
       const prisma = new PrismaClient()
-      await prisma.$connect()
+      try {
+        await prisma.$connect()
+      } catch (error) {
+        console.error('Error connecting to database:', error)
+        process.exit(1)
+      }
       console.log('Connected to database.')
       fastify
         .decorate('prisma', prisma)
