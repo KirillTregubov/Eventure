@@ -11,8 +11,14 @@ export const getUser = async (prisma: PrismaClient, userId: string) => {
   const user = await prisma.user.findUnique({
     where: {
       userId: userId
+    },
+    include: {
+      organizations: true,
+      pointCounts: true,
+      attendances: true
     }
   })
+  //const 
   return user
 }
 

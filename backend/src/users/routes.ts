@@ -38,7 +38,7 @@ export default function (
     {
       schema: {
         tags: ['Users'],
-        summary: 'Get user by ID',
+        summary: 'Get all user data from their ID',
         params: 
           {
             ...$ref('GetUserParams'),
@@ -68,12 +68,12 @@ export default function (
       schema: {
         tags: ['Users'],
         summary: 'Create a new user',
-        params:
-          {
-            ...$ref('CreateUserBody'),
-            description: 'Creating a user'
-          },
-     //   body: $ref('CreateUserBody'),
+        // params:
+        //   {
+        //     ...$ref('CreateUserBody'),
+        //     description: 'Creating a user'
+        //   },
+        body: $ref('CreateUserBody'),
         response: {
           200: {
             ...$ref('CreateUserResponse'),
@@ -87,8 +87,8 @@ export default function (
         }
       }
     },
-    async (req: FastifyRequest<{ Params: CreateUserBody }>, reply) => {
-      const user = await createUser(fastify.prisma, req.params)
+    async (req: FastifyRequest<{ Body: CreateUserBody }>, reply) => {
+      const user = await createUser(fastify.prisma, req.body)
       reply.send(user)
     }
   )
