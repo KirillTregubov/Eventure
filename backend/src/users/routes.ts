@@ -39,13 +39,12 @@ export default function (
       schema: {
         tags: ['Users'],
         summary: 'Get all user data from their ID',
-        params: 
-          {
-            ...$ref('GetUserParams'),
-            description: 'The ID of the user'
-          },
+        params: {
+          ...$ref('GetUserParams'),
+          description: 'The ID of the user'
+        },
         response: {
-           200: {
+          200: {
             ...$ref('GetUserResponse'),
             description: 'One user'
           },
@@ -56,8 +55,8 @@ export default function (
         }
       }
     },
-    async (req:FastifyRequest<{Params: GetUserParams}>, reply) => {
-      const users = await getUser(fastify.prisma, req.params?.userId)
+    async (req: FastifyRequest<{ Params: GetUserParams }>, reply) => {
+      const users = await getUser(fastify.prisma, req.params.userId)
       reply.send(users)
     }
   )
