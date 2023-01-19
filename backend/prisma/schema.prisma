@@ -18,6 +18,7 @@ model User {
   // https://www.rfc-editor.org/errata_search.php?rfc=3696&eid=1690
   email         String         @unique @db.VarChar(254)
   attendances   Attendance[]
+  points        Int            @default(0)
   pointCounts   PointCount[]
   organizations Organization[]
 }

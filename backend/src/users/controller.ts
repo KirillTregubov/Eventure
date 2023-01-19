@@ -14,11 +14,12 @@ export const getUser = async (prisma: PrismaClient, userId: string) => {
     },
     include: {
       organizations: true,
-      pointCounts: true,
+      // pointCounts: {
+      //   points: true
+      // },
       attendances: true
     }
   })
-  //const 
   return user
 }
 

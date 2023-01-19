@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { buildJsonSchemas } from 'fastify-zod'
 
-const Organization = z.object({
+export const Organization = z.object({
   organizationId: z.string().uuid(),
   organizationName: z.string()
 })
