@@ -7,6 +7,8 @@ export const getOrganizations = async (prisma: PrismaClient) => {
   return organizations
 }
 
+export const getOrgEvents = async (prisma: PrismaClient) => {}
+
 // TODO: getOrganizationById, getOrganizationsByUser
 
 export const createOrganization = async (
@@ -20,7 +22,7 @@ export const createOrganization = async (
         organizationName: body.organizationName,
         admins: {
           connect: {
-            userId: '12da9d6b-0662-46c3-aec8-ab10067dfbe5' // 5
+            userId: '9e667f07-4b63-4951-91fa-86544d7bcfd1' // 5
           }
         }
       }

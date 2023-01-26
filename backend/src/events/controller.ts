@@ -2,42 +2,70 @@ import { Prisma, PrismaClient } from '@prisma/client'
 import { UniqueConstraintException } from 'lib/exceptions'
 import { CreateEventBody } from './schemas'
 
+export const getEvents = async (prisma: PrismaClient) => {
+  const events = await prisma.event.findMany()
+  return events
+}
+
 export const createEvent = async (
   prisma: PrismaClient,
   body: CreateEventBody
 ) => {
   try {
+    const {
+      eventName,
+      greeting,
+      eventType,
+      maxAttendees,
+      price,
+      startDate,
+      endDate,
+      pointsEarned,
+      startTime,
+      endTime,
+      addressLatitude,
+      addressLongitude,
+      organizationId
+    } = body
     // schema in ./schemas.ts
     console.log(body)
     // TODO: zero out seconds and milliseconds for start and end time
 
     const event = await prisma.event.create({
       data: {
-        eventName: 'Event 1',
-        greeting: 'Welcome to the Event!',
-        eventType: 'ONLINE',
-        maxAttendees: 10,
-        price: 10.0,
-        startDate: new Date('2023-03-02'),
-        endDate: new Date('2023-03-03'),
-        startTime: new Date('2023-03-03T14:00:00.000Z'),
-        endTime: new Date('2023-03-04T01:00:00.000Z'),
-        pointsEarned: 100,
-        allowUnregistered: false,
-        addressLatitude: 43.653225,
-        addressLongitude: -79.383186,
+        eventName,
+        greeting,
+        eventType,
+        maxAttendees,
+        price,
+        startDate,
+        endDate,
+        pointsEarned,
+        // eventName: 'Event 1',
+        // greeting: 'Welcome to the Event!',
+        // eventType: 'ONLINE',
+        // maxAttendees: 10,
+        // price: 10.0,
+        // startDate: new Date('2023-03-02'),
+        // endDate: new Date('2023-03-03'),
+        startTime,
+        endTime,
+        // pointsEarned: 100,
+        // allowUnregistered: false,
+        addressLatitude,
+        addressLongitude,
         organization: {
           connect: {
-            organizationId: 'b1cf3498-72cf-45bd-9481-86fd247b3896'
-          }
-        },
-        details: {
-          create: {
-            detailName: 'detail1',
-            detailType: 'TEXT',
-            content: 'This is a pop concert'
+            organizationId
           }
         }
+        // details: {
+        //   create: {
+        //     detailName: 'detail1',
+        //     detailType: 'TEXT',
+        //     content: 'This is a pop concert'
+        //   }
+        // }
       }
     })
     return event

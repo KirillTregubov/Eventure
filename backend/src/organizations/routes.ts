@@ -33,6 +33,31 @@ export default function (
     }
   )
 
+  // Want to get all events for a particular organization, using organization Id
+  fastify.get(
+    '/',
+    {
+      schema: {
+        tags: ['Organizations'],
+        summary: 'Get all events for a particular organization',
+        response: {
+          200: {
+            ...$ref('GetOrgEventsResponse'),
+            description: 'List of events for organization'
+          },
+          500: {
+            ...$sharedRef('InternalServerError'),
+            description: 'Internal Server Error'
+          }
+        }
+      }
+    },
+    async (req, reply) => {
+      const organizations = await getOrganizations(fastify.prisma)
+      reply.send(organizations)
+    }
+  )
+
   fastify.post(
     '/',
     {
