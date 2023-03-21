@@ -2,8 +2,8 @@ import { FastifyInstance, FastifyRequest, RegisterOptions } from 'fastify'
 import {
   getOrganizations,
   createOrganization,
-  getOrgEvents,
-  getOrganizationsByUser
+  getOrganizationsByUser,
+  getOrganizationById
 } from './controller'
 import { DoneFunction } from '../lib/types'
 import {
