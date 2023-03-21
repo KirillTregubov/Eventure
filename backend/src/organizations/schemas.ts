@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import { buildJsonSchemas } from 'fastify-zod'
 import { Event } from 'events/schemas'
-import { GetUserParams } from 'users/schemas'
 
 export const Organization = z.object({
   organizationId: z.string().uuid(),
@@ -24,6 +23,13 @@ const GetOrgEventsResponse = Organization.extend({
   events: z.array(Event)
 })
 
+const GetOrganizationsByUserParams = z.object({
+  userId: z.string().uuid()
+})
+export type GetOrganizationsByUserParams = z.infer<
+  typeof GetOrganizationsByUserParams
+>
+
 export const { schemas: organizationSchemas, $ref } = buildJsonSchemas(
   {
     GetOrganizationsResponse,
@@ -31,7 +37,7 @@ export const { schemas: organizationSchemas, $ref } = buildJsonSchemas(
     CreateOrganizationResponse,
     GetOrgEventsParams,
     GetOrgEventsResponse,
-    GetUserParams
+    GetOrganizationsByUserParams
   },
   { $id: 'Organizations' }
 )

@@ -7,7 +7,7 @@ export const getOrganizations = async (prisma: PrismaClient) => {
   return organizations
 }
 
-export const getOrgEvents = async (
+export const getOrganizationById = async (
   prisma: PrismaClient,
   organizationId: string
 ) => {
@@ -22,7 +22,6 @@ export const getOrgEvents = async (
   return orgEvents
 }
 
-// TODO: getOrganizationById, getOrganizationsByUser
 export const getOrganizationsByUser = async (
   prisma: PrismaClient,
   userId: string

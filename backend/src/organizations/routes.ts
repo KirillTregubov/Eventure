@@ -6,9 +6,13 @@ import {
   getOrganizationsByUser
 } from './controller'
 import { DoneFunction } from '../lib/types'
-import { $ref, CreateOrganizationBody, GetOrgEventsParams } from './schemas'
+import {
+  $ref,
+  CreateOrganizationBody,
+  GetOrganizationsByUserParams,
+  GetOrgEventsParams
+} from './schemas'
 import { $sharedRef } from 'lib/schemas'
-import type { GetUserParamsType } from 'users/schemas'
 
 export default function (
   fastify: FastifyInstance,
@@ -40,38 +44,6 @@ export default function (
   )
 
   fastify.get(
-    '/user/:userId',
-    {
-      schema: {
-        tags: ['Organizations'],
-        summary: 'Get organizations by user',
-        params: {
-          ...$ref('GetUserParams'),
-          description: 'The ID of the user'
-        },
-        response: {
-          200: {
-            ...$ref('GetOrganizationsResponse'),
-            description: 'List of organizations'
-          },
-          500: {
-            ...$sharedRef('InternalServerError'),
-            description: 'Internal Server Error'
-          }
-        }
-      }
-    },
-    async (req: FastifyRequest<{ Params: GetUserParamsType }>, reply) => {
-      const organizations = await getOrganizationsByUser(
-        fastify.prisma,
-        req.params.userId
-      )
-      reply.send(organizations)
-    }
-  )
-
-  // Want to get all events for a particular organization, using organization Id
-  fastify.get(
     '/:organizationId',
     {
       schema: {
@@ -94,9 +66,43 @@ export default function (
       }
     },
     async (req: FastifyRequest<{ Params: GetOrgEventsParams }>, reply) => {
-      const organizations = await getOrgEvents(
+      const organizations = await getOrganizationById(
         fastify.prisma,
         req.params.organizationId
+      )
+      reply.send(organizations)
+    }
+  )
+
+  fastify.get(
+    '/user/:userId',
+    {
+      schema: {
+        tags: ['Organizations'],
+        summary: 'Get organizations by user',
+        params: {
+          ...$ref('GetOrganizationsByUserParams'),
+          description: 'The ID of the user'
+        },
+        response: {
+          200: {
+            ...$ref('GetOrganizationsResponse'),
+            description: 'List of organizations'
+          },
+          500: {
+            ...$sharedRef('InternalServerError'),
+            description: 'Internal Server Error'
+          }
+        }
+      }
+    },
+    async (
+      req: FastifyRequest<{ Params: GetOrganizationsByUserParams }>,
+      reply
+    ) => {
+      const organizations = await getOrganizationsByUser(
+        fastify.prisma,
+        req.params.userId
       )
       reply.send(organizations)
     }

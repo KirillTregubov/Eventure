@@ -14,7 +14,7 @@ const User = z.object({
 export const GetUserParams = z.object({
   userId: z.string().uuid()
 })
-export type GetUserParamsType = z.infer<typeof GetUserParams>
+export type GetUserParams = z.infer<typeof GetUserParams>
 
 const GetUsersResponse = z.array(User)
 
