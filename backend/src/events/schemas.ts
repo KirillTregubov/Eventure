@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { buildJsonSchemas } from 'fastify-zod'
 
-const Event = z.object({
+export const Event = z.object({
   eventId: z.string().uuid(),
   eventName: z.string(),
   greeting: z.string().optional(),

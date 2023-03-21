@@ -7,9 +7,40 @@ export const getOrganizations = async (prisma: PrismaClient) => {
   return organizations
 }
 
-export const getOrgEvents = async (prisma: PrismaClient) => {}
+export const getOrgEvents = async (
+  prisma: PrismaClient,
+  organizationId: string
+) => {
+  const orgEvents = await prisma.organization.findUnique({
+    where: {
+      organizationId
+    },
+    include: {
+      events: true
+    }
+  })
+  return orgEvents
+}
 
 // TODO: getOrganizationById, getOrganizationsByUser
+export const getOrganizationsByUser = async (
+  prisma: PrismaClient,
+  userId: string
+) => {
+  const organizations = await prisma.organization.findMany({
+    where: {
+      admins: {
+        some: {
+          userId
+        }
+      }
+    },
+    include: {
+      admins: true
+    }
+  })
+  return organizations
+}
 
 export const createOrganization = async (
   prisma: PrismaClient,

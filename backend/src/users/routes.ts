@@ -1,7 +1,12 @@
 import { FastifyInstance, RegisterOptions, FastifyRequest } from 'fastify'
 import { getUsers, createUser, getUser } from './controller'
 import { DoneFunction } from 'lib/types'
-import { $ref, CreateUserBody, GetUserParams } from './schemas'
+import {
+  $ref,
+  CreateUserBody,
+  GetUserParams,
+  GetUserParamsType
+} from './schemas'
 import { $sharedRef } from 'lib/schemas'
 
 export default function (
@@ -55,7 +60,7 @@ export default function (
         }
       }
     },
-    async (req: FastifyRequest<{ Params: GetUserParams }>, reply) => {
+    async (req: FastifyRequest<{ Params: GetUserParamsType }>, reply) => {
       const users = await getUser(fastify.prisma, req.params.userId)
       reply.send(users)
     }
