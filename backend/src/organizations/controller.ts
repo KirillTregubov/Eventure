@@ -22,6 +22,23 @@ export const getOrganizationById = async (
   return orgEvents
 }
 
+export const getAttendeesByOrgId = async (
+  prisma: PrismaClient,
+  organizationId: string
+) => {
+  const orgAttendees = await prisma.organization.findUnique({
+    where: {
+      organizationId
+    },
+    include: {
+      // top 2 attendees
+      // I know this is probably incorrect, just keeping this as a placeholder value for now until I figure out how to get the top 2 attendees
+      pointCounts: true
+    }
+  })
+  return orgAttendees
+}
+
 export const getOrganizationsByUser = async (
   prisma: PrismaClient,
   userId: string

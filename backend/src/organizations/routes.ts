@@ -3,14 +3,16 @@ import {
   getOrganizations,
   createOrganization,
   getOrganizationsByUser,
-  getOrganizationById
+  getOrganizationById,
+  getAttendeesByOrgId
 } from './controller'
 import { DoneFunction } from '../lib/types'
 import {
   $ref,
   CreateOrganizationBody,
   GetOrganizationsByUserParams,
-  GetOrgEventsParams
+  GetOrgEventsParams,
+  GetOrgAttendeesParams
 } from './schemas'
 import { $sharedRef } from 'lib/schemas'
 
@@ -48,10 +50,11 @@ export default function (
     {
       schema: {
         tags: ['Organizations'],
-        summary: 'Get all events for a particular organization',
+        summary:
+          'Get all events for a particular organization by organizationId',
         params: {
           ...$ref('GetOrgEventsParams'),
-          description: 'The ID of the user'
+          description: 'The ID of the organization'
         },
         response: {
           200: {
@@ -75,11 +78,42 @@ export default function (
   )
 
   fastify.get(
+    '/attendees/:organizationId',
+    {
+      schema: {
+        tags: ['Organizations'],
+        summary: 'Get top attendees for organization by organizationId',
+        params: {
+          ...$ref('GetOrgAttendeesParams'),
+          description: 'The ID of the organization'
+        },
+        response: {
+          200: {
+            ...$ref('GetOrgAttendeesResponse'),
+            description: 'List of top attendees for a particular organization'
+          },
+          500: {
+            ...$sharedRef('InternalServerError'),
+            description: 'Internal Server Error'
+          }
+        }
+      }
+    },
+    async (req: FastifyRequest<{ Params: GetOrgAttendeesParams }>, reply) => {
+      const attendees = await getAttendeesByOrgId(
+        fastify.prisma,
+        req.params.organizationId
+      )
+      reply.send(attendees)
+    }
+  )
+
+  fastify.get(
     '/user/:userId',
     {
       schema: {
         tags: ['Organizations'],
-        summary: 'Get organizations by user',
+        summary: 'Get organizations of a user by userId',
         params: {
           ...$ref('GetOrganizationsByUserParams'),
           description: 'The ID of the user'

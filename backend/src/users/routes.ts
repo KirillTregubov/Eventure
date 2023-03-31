@@ -67,11 +67,6 @@ export default function (
       schema: {
         tags: ['Users'],
         summary: 'Create a new user',
-        // params:
-        //   {
-        //     ...$ref('CreateUserBody'),
-        //     description: 'Creating a user'
-        //   },
         body: $ref('CreateUserBody'),
         response: {
           200: {
