@@ -121,7 +121,7 @@ export default function (
         response: {
           200: {
             ...$ref('GetOrganizationsResponse'),
-            description: 'List of organizations'
+            description: 'List of organizations belonging to a user'
           },
           500: {
             ...$sharedRef('InternalServerError'),

@@ -3,6 +3,7 @@ import { buildJsonSchemas } from 'fastify-zod'
 import { Event } from 'events/schemas'
 
 export const Organization = z.object({
+  userId: z.string().uuid(), // Associating each organization with a user (userId), to allow organizations to be called based on userId
   organizationId: z.string().uuid(),
   organizationName: z.string()
 })
@@ -20,7 +21,9 @@ export type GetOrgEventsParams = z.infer<typeof GetOrgEventsParams>
 
 const GetOrganizationsResponse = z.array(Organization)
 
-const CreateOrganizationBody = Organization.omit({ organizationId: true })
+const CreateOrganizationBody = Organization.omit({
+  organizationId: true
+})
 export type CreateOrganizationBody = z.infer<typeof CreateOrganizationBody>
 
 const CreateOrganizationResponse = Organization
