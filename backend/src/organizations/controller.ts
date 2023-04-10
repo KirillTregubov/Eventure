@@ -26,14 +26,18 @@ export const getAttendeesByOrgId = async (
   prisma: PrismaClient,
   organizationId: string
 ) => {
-  const orgAttendees = await prisma.organization.findUnique({
+  const orgAttendees = await prisma.organization.findFirst({
     where: {
       organizationId
     },
-    include: {
+    select: {
       // top 2 attendees
       // I know this is probably incorrect, just keeping this as a placeholder value for now until I figure out how to get the top 2 attendees
-      pointCounts: true
+      pointCounts: {
+        orderBy: {
+          points: 'desc'
+        }
+      }
     }
   })
   return orgAttendees
@@ -69,7 +73,7 @@ export const createOrganization = async (
         organizationName: body.organizationName,
         admins: {
           connect: {
-            userId: '9e667f07-4b63-4951-91fa-86544d7bcfd1' // 5
+            userId: body.userId // 5
           }
         }
       }
@@ -85,4 +89,18 @@ export const createOrganization = async (
     }
     throw error
   }
+}
+
+export const deleteOrganization = async (
+  prisma: PrismaClient,
+  organizationId: string
+) => {
+  const organization = await prisma.organization.delete({
+    where: {
+      organizationId
+    }
+  }) // List of all orgs
+
+  // Returning details of deleted organization
+  return organization
 }

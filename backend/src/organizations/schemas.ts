@@ -3,7 +3,6 @@ import { buildJsonSchemas } from 'fastify-zod'
 import { Event } from 'events/schemas'
 
 export const Organization = z.object({
-  userId: z.string().uuid(), // Associating each organization with a user (userId), to allow organizations to be called based on userId
   organizationId: z.string().uuid(),
   organizationName: z.string()
 })
@@ -23,10 +22,19 @@ const GetOrganizationsResponse = z.array(Organization)
 
 const CreateOrganizationBody = Organization.omit({
   organizationId: true
+}).extend({
+  userId: z.string().uuid()
 })
 export type CreateOrganizationBody = z.infer<typeof CreateOrganizationBody>
 
 const CreateOrganizationResponse = Organization
+
+const DeleteOrganizationResponse = Organization
+
+const GetOrgDeletionParams = z.object({
+  organizationId: z.string().uuid()
+})
+export type GetOrgDeletionParams = z.infer<typeof GetOrgDeletionParams>
 
 const GetOrgEventsResponse = Organization.extend({
   events: z.array(Event)
@@ -50,14 +58,16 @@ const GetOrgAttendeesResponse = Organization.extend({
 
 export const { schemas: organizationSchemas, $ref } = buildJsonSchemas(
   {
-    GetOrganizationsResponse,
     CreateOrganizationBody,
     CreateOrganizationResponse,
     GetOrgEventsParams,
-    GetOrgEventsResponse,
-    GetOrganizationsByUserParams,
+    GetOrgDeletionParams,
     GetOrgAttendeesParams,
-    GetOrgAttendeesResponse
+    GetOrganizationsByUserParams,
+    GetOrganizationsResponse,
+    GetOrgEventsResponse,
+    GetOrgAttendeesResponse,
+    DeleteOrganizationResponse
   },
   { $id: 'Organizations' }
 )

@@ -4,7 +4,8 @@ import {
   createOrganization,
   getOrganizationsByUser,
   getOrganizationById,
-  getAttendeesByOrgId
+  getAttendeesByOrgId,
+  deleteOrganization
 } from './controller'
 import { DoneFunction } from '../lib/types'
 import {
@@ -12,7 +13,8 @@ import {
   CreateOrganizationBody,
   GetOrganizationsByUserParams,
   GetOrgEventsParams,
-  GetOrgAttendeesParams
+  GetOrgAttendeesParams,
+  GetOrgDeletionParams
 } from './schemas'
 import { $sharedRef } from 'lib/schemas'
 
@@ -46,7 +48,7 @@ export default function (
   )
 
   fastify.get(
-    '/:organizationId',
+    '/orgevents/:organizationId',
     {
       schema: {
         tags: ['Organizations'],
@@ -165,6 +167,38 @@ export default function (
     async (req: FastifyRequest<{ Body: CreateOrganizationBody }>, reply) => {
       const event = await createOrganization(fastify.prisma, req.body)
       reply.send(event)
+    }
+  )
+
+  fastify.delete(
+    '/delete/:organizationId',
+    {
+      schema: {
+        tags: ['Organizations'],
+        summary: 'Delete an organization',
+        params: {
+          ...$ref('GetOrgDeletionParams'),
+          description: 'The ID of the organization'
+        },
+        response: {
+          200: {
+            ...$ref('DeleteOrganizationResponse'),
+            description: 'Organization deleted'
+          },
+          400: { ...$sharedRef('BadRequest'), description: 'Bad Request' },
+          500: {
+            ...$sharedRef('InternalServerError'),
+            description: 'Internal Server Error'
+          }
+        }
+      }
+    },
+    async (req: FastifyRequest<{ Params: GetOrgDeletionParams }>, reply) => {
+      const organization = await deleteOrganization(
+        fastify.prisma,
+        req.params.organizationId
+      )
+      reply.send(organization)
     }
   )
 
