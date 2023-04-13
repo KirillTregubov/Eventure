@@ -10,13 +10,14 @@ import {
   Button,
   Alert
 } from 'react-native'
-import { FloatingLabelInput } from 'react-native-floating-label-input'
+// import { FloatingLabelInput } from 'react-native-floating-label-input'
 import { CalendarIcon, PlusIcon } from 'react-native-heroicons/solid'
 
 import Styles from '../lib/Styles'
-import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
+import DateTimePicker, {
+  DateTimePickerAndroid
+} from '@react-native-community/datetimepicker'
 // import DatePicker from 'react-native-date-picker'
-import DateTimePicker from '@react-native-community/datetimepicker'
 
 export default function CreateEvent() {
   const scheme = useColorScheme()
@@ -43,20 +44,29 @@ export default function CreateEvent() {
 
   const submit = () => {
     if (eventName.length == 0) {
-      Alert.alert('Error', 'Cannot create an event with an empty name!')
+      Alert.alert(
+        'Scheduling Error',
+        'Cannot create an event with an empty name!'
+      )
       return
     }
     if (greeting.length == 0) {
-      Alert.alert('Error', 'Cannot create an event without a greeting!')
+      Alert.alert(
+        'Scheduling Error',
+        'Cannot create an event without a greeting!'
+      )
       return
     }
     if (platformType.length == 0) {
-      Alert.alert('Error', 'Cannot create an event without a platform type!')
+      Alert.alert(
+        'Scheduling Error',
+        'Cannot create an event without a platform type!'
+      )
       return
     }
     if (maxAttendees == 0) {
       Alert.alert(
-        'Error',
+        'Scheduling Error',
         "Cannot create an event that doesn't allow attendees!"
       )
       return

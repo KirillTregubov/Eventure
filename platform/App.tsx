@@ -8,8 +8,8 @@ import {
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { QrcodeIcon, UserCircleIcon } from 'react-native-heroicons/outline'
-import { CalendarIcon } from 'react-native-heroicons/solid'
+import { QrCodeIcon, UserCircleIcon } from 'react-native-heroicons/outline'
+import { CalendarDaysIcon } from 'react-native-heroicons/solid'
 
 import { NavigationParams } from './lib/Navigation'
 import Main from './pages/Events'
@@ -48,7 +48,7 @@ function PlatformPage() {
         component={MainStackScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <CalendarIcon color={color} size={size} />
+            <CalendarDaysIcon color={color} size={size} />
           )
         }}
       />
@@ -66,7 +66,7 @@ function PlatformPage() {
                   : Styles.colors.indigo['600'],
                 padding: 15
               }}>
-              <QrcodeIcon color={Styles.colors.indigo['50']} size={size + 6} />
+              <QrCodeIcon color={Styles.colors.indigo['50']} size={size + 6} />
             </View>
           )
         }}
