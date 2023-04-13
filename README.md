@@ -11,6 +11,12 @@
   </p>
 </div>
 
+## What is it?
+
+Eventure is a mobile app designed to simplify event management for organizers and attendees alike. With Eventure, organizers can easily create and manage events through the app's user-friendly interface. Once registered, organizers can generate unique QR codes that attendees can scan to attend the event.
+
+One of the key features of Eventure is its point-based system, which rewards attendees for participating in events. Every time a user attends an event, they earn points that can be redeemed for exclusive prizes or discounted rates for future events. This system encourages users to attend more events and creates a fun, engaging experience for all attendees.
+
 ## Roles
 
 Platform/Frontend Developer: [@KirillTregubov](https://www.github.com/KirillTregubov)
