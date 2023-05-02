@@ -7,6 +7,15 @@ export const getEvents = async (prisma: PrismaClient) => {
   return events
 }
 
+export const getEventById = async (prisma: PrismaClient, eventId: string) => {
+  const event = await prisma.event.findUnique({
+    where: {
+      eventId: eventId
+    }
+  })
+  return event
+}
+
 export const createEvent = async (
   prisma: PrismaClient,
   body: CreateEventBody

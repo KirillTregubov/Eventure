@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyInstance, RegisterOptions } from 'fastify'
-import { createEvent, getEvents } from './controller'
+import { createEvent, getEvents, getEventById } from './controller'
 import { DoneFunction } from '../lib/types'
-import { $ref, CreateEventBody } from './schemas'
+import { $ref, CreateEventBody, GetEventParams } from './schemas'
 import { $sharedRef } from 'lib/schemas'
 
 export default function (
@@ -32,6 +32,34 @@ export default function (
     async (req, reply) => {
       const events = await getEvents(fastify.prisma)
       reply.send(events)
+    }
+  )
+
+  fastify.get(
+    '/:eventId',
+    {
+      schema: {
+        tags: ['Events'],
+        summary: 'Get all event data by its ID',
+        params: {
+          ...$ref('GetEventParams'),
+          description: 'The ID of the event'
+        },
+        response: {
+          200: {
+            ...$ref('GetEventResponse'),
+            description: 'One event'
+          },
+          500: {
+            ...$sharedRef('InternalServerError'),
+            description: 'Internal Server Error'
+          }
+        }
+      }
+    },
+    async (req: FastifyRequest<{ Params: GetEventParams }>, reply) => {
+      const event = await getEventById(fastify.prisma, req.params.eventId)
+      reply.send(event)
     }
   )
 

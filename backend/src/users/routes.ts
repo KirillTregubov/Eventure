@@ -56,8 +56,8 @@ export default function (
       }
     },
     async (req: FastifyRequest<{ Params: GetUserParams }>, reply) => {
-      const users = await getUser(fastify.prisma, req.params.userId)
-      reply.send(users)
+      const user = await getUser(fastify.prisma, req.params.userId)
+      reply.send(user)
     }
   )
 
