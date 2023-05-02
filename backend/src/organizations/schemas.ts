@@ -7,10 +7,9 @@ export const Organization = z.object({
   organizationName: z.string()
 })
 
-export const TopAttendees = z.object({
-  // Will correct this later
-  attendee1: z.string(),
-  attendee2: z.string()
+export const Attendees = z.object({
+  userId: z.string().uuid(),
+  points: z.number()
 })
 
 const GetOrgEventsParams = z.object({
@@ -53,7 +52,7 @@ const GetOrgAttendeesParams = z.object({
 export type GetOrgAttendeesParams = z.infer<typeof GetOrgAttendeesParams>
 
 const GetOrgAttendeesResponse = Organization.extend({
-  attendees: z.array(TopAttendees)
+  pointCounts: z.array(Attendees)
 })
 
 export const { schemas: organizationSchemas, $ref } = buildJsonSchemas(

@@ -3,7 +3,7 @@ import {
   getOrganizations,
   createOrganization,
   getOrganizationsByUser,
-  getOrganizationById,
+  getEventsByOrgId,
   getAttendeesByOrgId,
   deleteOrganization
 } from './controller'
@@ -71,7 +71,7 @@ export default function (
       }
     },
     async (req: FastifyRequest<{ Params: GetOrgEventsParams }>, reply) => {
-      const organizations = await getOrganizationById(
+      const organizations = await getEventsByOrgId(
         fastify.prisma,
         req.params.organizationId
       )
@@ -84,7 +84,7 @@ export default function (
     {
       schema: {
         tags: ['Organizations'],
-        summary: 'Get top attendees for organization by organizationId',
+        summary: 'Get all attendees for organization by organizationId',
         params: {
           ...$ref('GetOrgAttendeesParams'),
           description: 'The ID of the organization'
@@ -92,7 +92,7 @@ export default function (
         response: {
           200: {
             ...$ref('GetOrgAttendeesResponse'),
-            description: 'List of top attendees for a particular organization'
+            description: 'List of attendees for a particular organization'
           },
           500: {
             ...$sharedRef('InternalServerError'),
