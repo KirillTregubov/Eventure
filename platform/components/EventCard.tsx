@@ -2,6 +2,8 @@ import { Text, useColorScheme, View } from 'react-native'
 import { TouchableHighlight } from 'react-native-gesture-handler'
 import { Event } from '../lib/DataTypes'
 import Styles from '../lib/Styles'
+import { NavigationParams } from '../lib/Navigation'
+import { StackNavigationProp } from '@react-navigation/stack'
 
 export default function EventCard({
   navigation,

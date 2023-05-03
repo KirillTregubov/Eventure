@@ -6,6 +6,7 @@ import { NavigationParams } from '../lib/Navigation'
 import Styles from '../lib/Styles'
 import EventCard from '../components/EventCard'
 import { AllEvents, SampleEvent, UserData } from '../lib/Data'
+import { getAllEventsRequest } from '../lib/Api'
 
 const HomeScreen = ({
   navigation
@@ -23,6 +24,7 @@ const HomeScreen = ({
   //   rsvpEvents: []
   // }
   const userData = UserData
+  const allEventsData = getAllEventsRequest
 
   return (
     <ScrollView
@@ -93,7 +95,7 @@ const HomeScreen = ({
           /> */}
         </View>
       </View>
-      <View style={{ paddingHorizontal: 18 }}>
+      {/* <View style={{ paddingHorizontal: 18 }}>
         <Text
           style={{
             fontWeight: '700',
@@ -117,7 +119,7 @@ const HomeScreen = ({
         {userData.rsvpEvents.map((e, i) => (
           <EventCard navigation={navigation} event={SampleEvent} key={i} />
         ))}
-      </View>
+      </View> */}
       <View style={{ paddingHorizontal: 18 }}>
         <Text
           style={{
@@ -139,7 +141,7 @@ const HomeScreen = ({
           paddingHorizontal: 14,
           paddingBottom: 20
         }}>
-        {AllEvents.map((event, index) => (
+        {allEventsData.map((event, index) => (
           <EventCard navigation={navigation} event={event} key={index} />
         ))}
       </View>
