@@ -1,14 +1,20 @@
 import { StackNavigationProp } from '@react-navigation/stack'
 import { useQuery } from '@tanstack/react-query'
-import { ScrollView, Text, useColorScheme, View } from 'react-native'
-import { ChevronRightIcon } from 'react-native-heroicons/outline'
+import {
+  RefreshControl,
+  ScrollView,
+  Text,
+  useColorScheme,
+  View
+} from 'react-native'
+// import { ChevronRightIcon } from 'react-native-heroicons/outline'
 
 import { NavigationParams } from '../lib/Navigation'
 import { Event } from '../lib/Schemas'
 import Styles from '../lib/Styles'
 import EventCard from '../components/EventCard'
-import { AllEvents, SampleEvent, UserData } from '../lib/Data'
-import { getAllEventsRequest, getEventsPageData } from '../lib/Api'
+import { UserData } from '../lib/Data'
+import { getEventsPageData } from '../lib/Api'
 
 const HomeScreen = ({
   navigation
@@ -26,22 +32,22 @@ const HomeScreen = ({
   //   rsvpEvents: []
   // }
   const userData = UserData
-  const { status, data, error } = useQuery({
+  const { status, data, error, refetch } = useQuery({
     queryKey: ['events-page'],
     queryFn: getEventsPageData
   })
 
   if (status === 'loading') {
-    return <span>Loading...</span>
+    return <Text>Loading...</Text>
   }
 
   if (status === 'error') {
-    // @ts-ignore
-    return <span>Error: {error?.message}</span>
+    return <Text>Error: {error.message}</Text>
   }
 
   return (
     <ScrollView
+      refreshControl={<RefreshControl onRefresh={refetch} />}
       contentInsetAdjustmentBehavior={'automatic'}
       style={{
         minHeight: '100%',
@@ -156,8 +162,7 @@ const HomeScreen = ({
           paddingBottom: 20
         }}>
         {data.events.map((event: Event, index: number) => (
-          <Text>{JSON.stringify(event)}</Text>
-          // <EventCard navigation={navigation} event={event} key={index} />
+          <EventCard navigation={navigation} event={event} key={index} />
         ))}
       </View>
     </ScrollView>

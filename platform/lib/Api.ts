@@ -1,53 +1,22 @@
-// type SampleEvent = {
-//   name: string
-//   greeting: string
-//   pointsEarned: number
-//   startDate: string
-//   endDate: string
-//   startTime: string
-//   endTime: string
-//   details: [
-//     {
-//       name: string
-//       type: string
-//       content: string
-//     }
-//   ]
-//   address: {
-//     latitude: number
-//     longitude: number
-//   }
-// }
+import Constants from 'expo-constants'
+
+const API_URL = Constants?.manifest?.extra?.API_URL
 
 import { Events } from './Schemas'
 
-export async function getAllEventsRequest() {
-  //   returnSchema: {
-  //     firstName: string
-  //     lastName: string
-  //     username: string
-  //     organizations: [
-  //       {
-  //         name: string
-  //       }
-  //     ]
-  //     availablePrizes: {
-  //       amount: number
-  //       organization: string
-  //     }
-  //     rsvpEvents: [SampleEvent]
-  //   },
-  //   signal: AbortController['signal'] | undefined
-  //   error: Error
+export async function getAllEventsRequest(
+  signal: AbortController['signal'] | undefined
+) {
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), 5000)
 
-  const response = await fetch('https://localhost:3000//api/v1/events', {
+  const response = await fetch(new URL(`${API_URL}/api/v1/events`), {
     method: 'GET',
     headers: {
+      Accept: 'application/json',
       'Content-Type': 'application/json'
-    }
-    // signal: signal ? signal : controller.signal
+    },
+    signal: signal ? signal : controller.signal
   })
   clearTimeout(timeout)
   if (!response.ok) {
@@ -57,9 +26,7 @@ export async function getAllEventsRequest() {
         token: undefined
       }
     }
-    // createStatusBreadcrumb(response.status)
-    // throw error
-    return []
+    return new Error('Error getting all events')
   }
   const json = await response.json()
 
@@ -69,7 +36,7 @@ export async function getAllEventsRequest() {
     throw Error('Data validation error')
   }
 
-  return json
+  return result.data
 }
 
 export async function getEventsPageData() {

@@ -90,7 +90,7 @@ fastify.register(
 fastify.register(swaggerUi, { routePrefix: '/docs' })
 fastify.register(routes, { prefix: '/api/v1' })
 fastify.setErrorHandler(errorHandler)
-fastify.listen({ port: port }, () => {
+fastify.listen({ port: port, host: '0.0.0.0' }, () => {
   console.log(`Backend listening on port ${port}!`)
   fastify.swagger()
   console.log(`Documentation available at http://localhost:${port}/docs`)

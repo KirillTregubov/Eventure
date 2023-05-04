@@ -5,6 +5,7 @@ import Styles from '../lib/Styles'
 import { NavigationParams } from '../lib/Navigation'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { EventType } from '../lib/Schemas'
+import { formatDateRange } from '../lib/Utils'
 
 export default function EventCard({
   navigation,
@@ -14,9 +15,6 @@ export default function EventCard({
   event: EventType
 }): JSX.Element {
   const scheme = useColorScheme()
-
-  console.log(event.startDate)
-  console.log(event.endDate)
 
   return (
     <View
@@ -56,7 +54,7 @@ export default function EventCard({
                   ? Styles.colors.neutral['400']
                   : Styles.colors.neutral['600']
             }}>
-            {/* {event.startDate} - {event.endDate} */}
+            {formatDateRange(event.startDate, event.endDate)}
           </Text>
           <Text
             style={{

@@ -2,6 +2,7 @@
   "expo": {
     "name": "Event Platform",
     "slug": "hackthe6ix",
+    "owner": "h6team",
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -10,6 +11,10 @@
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/b68118be-9c94-4ed3-a5d3-8b2fa01db050"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
