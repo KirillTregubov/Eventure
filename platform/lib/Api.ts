@@ -39,8 +39,10 @@ export async function getAllEventsRequest(
   return result.data
 }
 
-export async function getEventsPageData() {
-  const events = await getAllEventsRequest()
+export async function getEventsPageData(
+  signal: AbortController['signal'] | undefined
+) {
+  const events = await getAllEventsRequest(signal)
   return {
     events
   }

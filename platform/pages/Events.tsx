@@ -34,7 +34,7 @@ const HomeScreen = ({
   const userData = UserData
   const { status, data, error, refetch } = useQuery({
     queryKey: ['events-page'],
-    queryFn: getEventsPageData
+    queryFn: ({ signal }) => getEventsPageData(signal)
   })
 
   if (status === 'loading') {
