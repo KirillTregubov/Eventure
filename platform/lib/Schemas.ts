@@ -22,7 +22,7 @@ export const Event = z.object({
   endTime: z.string().datetime(),
   addressLatitude: z.number(),
   addressLongitude: z.number(),
-  details: z.array(Detail)
+  details: z.array(Detail).optional() // TODO: handle incomplete events, I suggest having Event and EventPreview (for home page)
 })
 
 export type EventType = z.infer<typeof Event>
