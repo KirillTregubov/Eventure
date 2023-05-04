@@ -32,9 +32,7 @@ export type CreateEventBody = z.infer<typeof CreateEventBody>
 
 const CreateEventResponse = Event
 
-const GetEventsResponse = z.array(
-  Event.pick({ eventId: true, eventName: true })
-)
+const GetEventsResponse = z.array(Event)
 
 export const { schemas: eventSchemas, $ref } = buildJsonSchemas(
   {

@@ -1,18 +1,22 @@
 import { Text, useColorScheme, View } from 'react-native'
 import { TouchableHighlight } from 'react-native-gesture-handler'
-import { Event } from '../lib/DataTypes'
+// import { Event } from '../lib/DataTypes'
 import Styles from '../lib/Styles'
 import { NavigationParams } from '../lib/Navigation'
 import { StackNavigationProp } from '@react-navigation/stack'
+import { EventType } from '../lib/Schemas'
 
 export default function EventCard({
   navigation,
   event
 }: {
   navigation: StackNavigationProp<NavigationParams>
-  event: Event
+  event: EventType
 }): JSX.Element {
   const scheme = useColorScheme()
+
+  console.log(event.startDate)
+  console.log(event.endDate)
 
   return (
     <View
@@ -22,7 +26,9 @@ export default function EventCard({
         padding: 4
       }}>
       <TouchableHighlight
-        onPress={() => navigation.navigate('EventPage', { name: event.name })}
+        onPress={() =>
+          navigation.navigate('EventPage', { name: event.eventId })
+        }
         underlayColor={
           scheme === 'dark'
             ? Styles.colors.neutral['600']
@@ -50,7 +56,7 @@ export default function EventCard({
                   ? Styles.colors.neutral['400']
                   : Styles.colors.neutral['600']
             }}>
-            {event.startDate} - {event.endDate}
+            {/* {event.startDate} - {event.endDate} */}
           </Text>
           <Text
             style={{
@@ -59,7 +65,7 @@ export default function EventCard({
               color: scheme === 'dark' ? 'white' : 'black'
               // consider using 'white' with image
             }}>
-            {event.name}
+            {event.eventName}
           </Text>
         </View>
       </TouchableHighlight>

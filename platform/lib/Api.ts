@@ -19,7 +19,9 @@
 //   }
 // }
 
-export async function getAllEventsRequest(
+import { Events } from './Schemas'
+
+export async function getAllEventsRequest() {
   //   returnSchema: {
   //     firstName: string
   //     lastName: string
@@ -35,9 +37,8 @@ export async function getAllEventsRequest(
   //     }
   //     rsvpEvents: [SampleEvent]
   //   },
-  signal: AbortController['signal'] | undefined,
-  error: Error
-) {
+  //   signal: AbortController['signal'] | undefined
+  //   error: Error
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), 5000)
 
@@ -45,8 +46,8 @@ export async function getAllEventsRequest(
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
-    },
-    signal: signal ? signal : controller.signal
+    }
+    // signal: signal ? signal : controller.signal
   })
   clearTimeout(timeout)
   if (!response.ok) {
@@ -57,15 +58,23 @@ export async function getAllEventsRequest(
       }
     }
     // createStatusBreadcrumb(response.status)
-    throw error
+    // throw error
+    return []
   }
   const json = await response.json()
 
-  //   const validationResult = returnSchema.safeParse(json)
-  //   if (!validationResult.success) {
-  //     console.error('Zod validation error:', validationResult.error)
-  //     throw Error('Data validation error')
-  //   }
+  const result = Events.safeParse(json)
+  if (!result.success) {
+    console.error('Zod validation error:', result.error)
+    throw Error('Data validation error')
+  }
 
   return json
+}
+
+export async function getEventsPageData() {
+  const events = await getAllEventsRequest()
+  return {
+    events
+  }
 }

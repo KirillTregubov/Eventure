@@ -10,6 +10,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { QrCodeIcon, UserCircleIcon } from 'react-native-heroicons/outline'
 import { CalendarDaysIcon } from 'react-native-heroicons/solid'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import { NavigationParams } from './lib/Navigation'
 import Main from './pages/Events'
@@ -20,6 +21,8 @@ import EventPage from './pages/EventPage'
 import OrganizationPage from './pages/OrganizationPage'
 import CreateEvent from './pages/CreateEvent'
 import Styles from './lib/Styles'
+
+const queryClient = new QueryClient()
 
 const MainStack = createNativeStackNavigator()
 function MainStackScreen() {
@@ -92,7 +95,7 @@ export default function App() {
   const scheme = useColorScheme()
 
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack.Navigator
           screenOptions={{
@@ -121,6 +124,6 @@ export default function App() {
       </NavigationContainer>
 
       <StatusBar style="auto" />
-    </>
+    </QueryClientProvider>
   )
 }

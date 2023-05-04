@@ -1,12 +1,14 @@
 import { StackNavigationProp } from '@react-navigation/stack'
+import { useQuery } from '@tanstack/react-query'
 import { ScrollView, Text, useColorScheme, View } from 'react-native'
 import { ChevronRightIcon } from 'react-native-heroicons/outline'
 
 import { NavigationParams } from '../lib/Navigation'
+import { Event } from '../lib/Schemas'
 import Styles from '../lib/Styles'
 import EventCard from '../components/EventCard'
 import { AllEvents, SampleEvent, UserData } from '../lib/Data'
-import { getAllEventsRequest } from '../lib/Api'
+import { getAllEventsRequest, getEventsPageData } from '../lib/Api'
 
 const HomeScreen = ({
   navigation
@@ -24,7 +26,19 @@ const HomeScreen = ({
   //   rsvpEvents: []
   // }
   const userData = UserData
-  const allEventsData = getAllEventsRequest
+  const { status, data, error } = useQuery({
+    queryKey: ['events-page'],
+    queryFn: getEventsPageData
+  })
+
+  if (status === 'loading') {
+    return <span>Loading...</span>
+  }
+
+  if (status === 'error') {
+    // @ts-ignore
+    return <span>Error: {error?.message}</span>
+  }
 
   return (
     <ScrollView
@@ -141,8 +155,9 @@ const HomeScreen = ({
           paddingHorizontal: 14,
           paddingBottom: 20
         }}>
-        {allEventsData.map((event, index) => (
-          <EventCard navigation={navigation} event={event} key={index} />
+        {data.events.map((event: Event, index: number) => (
+          <Text>{JSON.stringify(event)}</Text>
+          // <EventCard navigation={navigation} event={event} key={index} />
         ))}
       </View>
     </ScrollView>
