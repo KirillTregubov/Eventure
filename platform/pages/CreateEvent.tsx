@@ -28,9 +28,9 @@ export default function CreateEvent() {
   const [startDate, setStartDate] = useState(new Date())
   const [startDateOpen, setStartDateOpen] = useState(false)
 
-  const input2 = useRef()
-  const input3 = useRef()
-  const input4 = useRef()
+  const input2 = useRef<TextInput | null>(null)
+  const input3 = useRef<TextInput | null>(null)
+  const input4 = useRef<TextInput | null>(null)
 
   const organizationData = {
     name: 'My Cool Organization'
@@ -130,7 +130,7 @@ export default function CreateEvent() {
             returnKeyType={'next'}
             blurOnSubmit={false}
             onChangeText={setEventName}
-            onSubmitEditing={() => input2.current.focus()}
+            onSubmitEditing={() => input2.current?.focus()}
             value={eventName}
             placeholder={`${organizationData.name}'s Event`}
           />
@@ -172,7 +172,7 @@ export default function CreateEvent() {
               returnKeyType={'next'}
               blurOnSubmit={false}
               onChangeText={setGreeting}
-              onSubmitEditing={() => input3.current.focus()}
+              onSubmitEditing={() => input3.current?.focus()}
               value={greeting}
               ref={input2}
               placeholder="Welcome to our event!"
@@ -216,7 +216,7 @@ export default function CreateEvent() {
               returnKeyType={'next'}
               blurOnSubmit={false}
               onChangeText={setPlatformType}
-              onSubmitEditing={() => input4.current.focus()}
+              onSubmitEditing={() => input4.current?.focus()}
               value={platformType}
               ref={input3}
               placeholder="Hybrid"
@@ -258,9 +258,9 @@ export default function CreateEvent() {
               }}
               clearButtonMode={'while-editing'}
               blurOnSubmit={false}
-              onChangeText={setMaxAttendees}
+              onChangeText={(text) => setMaxAttendees(parseInt(text, 10))}
               onSubmitEditing={() => submit()}
-              value={maxAttendees}
+              value={maxAttendees.toString()}
               keyboardType={'numeric'}
               ref={input4}
               placeholder="100"

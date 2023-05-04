@@ -6,7 +6,7 @@ export const Event = z.object({
   eventName: z.string(),
   greeting: z.string().optional(),
   eventType: z.enum(['ONLINE', 'INPERSON', 'HYBRID']),
-  maxAttendees: z.number(),
+  maxAttendees: z.number().optional(),
   price: z.number().optional(),
   startDate: z.date(),
   endDate: z.date(),

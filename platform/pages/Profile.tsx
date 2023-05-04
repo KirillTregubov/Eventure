@@ -515,13 +515,15 @@ export default function Profile({ navigation }: ProfileProps) {
                 showsHorizontalScrollIndicator={false}
                 pagingEnabled={true}
                 style={{ marginHorizontal: 14 }}>
-                {userData.organizations.map((organization, index) => (
-                  <OrganizationCard
-                    navigation={navigation}
-                    organization={organization}
-                    key={index}
-                  />
-                ))}
+                {userData.organizations.map(
+                  (organization: any, index: number) => (
+                    <OrganizationCard
+                      navigation={navigation}
+                      organization={organization}
+                      key={index}
+                    />
+                  )
+                )}
               </ScrollView>
             </View>
           </>

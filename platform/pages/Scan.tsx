@@ -48,7 +48,7 @@ export default function Scan({ navigation }: ScanProps) {
   const scheme = useColorScheme()
   const isFocused = useIsFocused()
   const [isVisible, setIsVisible] = useState(Platform.OS === 'ios')
-  const [hasPermission, setHasPermission] = useState(null)
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null)
   const [flashEnabled, setFlashEnabled] = useState(false)
   const { top, bottom } = useSafeAreaInsets()
 

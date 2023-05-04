@@ -21,10 +21,7 @@ export async function getAllEventsRequest(
   clearTimeout(timeout)
   if (!response.ok) {
     if (response.status === 401) {
-      return { error: 'Forbidden' } as {
-        error: string
-        token: undefined
-      }
+      return new Error('Forbidden access')
     }
     return new Error('Error getting all events')
   }
@@ -79,6 +76,10 @@ export async function getEventsPageData(
   signal: AbortController['signal'] | undefined
 ) {
   const events = await getAllEventsRequest(signal)
+
+  if (events instanceof Error) {
+    throw events
+  }
   return {
     events
   }

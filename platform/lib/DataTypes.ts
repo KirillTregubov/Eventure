@@ -1,3 +1,5 @@
+import { EventType } from './Schemas'
+
 export type Event = {
   name: string
   greeting: string
@@ -21,18 +23,12 @@ export interface User {
   firstName: string
   lastName: string
   username: string
-  organizations: [
-    {
-      name: string
-    },
-    {
-      name: string
-    },
-    { name: string }
-  ]
+  organizations: Array<{
+    name: string
+  }>
   availablePrizes?: {
     amount: number
     organization: string
   }
-  rsvpEvents?: [Event]
+  rsvpEvents?: Array<EventType>
 }

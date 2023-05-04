@@ -11,6 +11,8 @@ import {
   SampleEvent
 } from '../lib/Data'
 import Styles from '../lib/Styles'
+import { DetailType } from '../lib/Schemas'
+import { formatDateRange } from '../lib/Utils'
 
 type EventPageParams = {
   route: {
@@ -82,7 +84,7 @@ export default function EventPage({ route }: EventPageParams) {
           paddingBottom: 2,
           color: scheme === 'dark' ? 'white' : 'black'
         }}>
-        {eventData.name}
+        {eventData.eventName}
       </Text>
       <View
         style={{
@@ -115,7 +117,7 @@ export default function EventPage({ route }: EventPageParams) {
                   ? Styles.colors.neutral['400']
                   : Styles.colors.neutral['500']
             }}>
-            {eventData.startDate} - {eventData.endDate}
+            {formatDateRange(eventData.startDate, eventData.endDate)}
           </Text>
         </View>
         <View
@@ -179,7 +181,8 @@ export default function EventPage({ route }: EventPageParams) {
         }}>
         Info provided by event
       </Text>
-      {eventData.details.map((detail, index) => {
+      {/* TODO: add Expanded EventType with details */}
+      {eventData.details.map((detail: DetailType, index: number) => {
         return (
           <View key={index}>
             {detail.type === 'text' && (
@@ -224,7 +227,8 @@ export default function EventPage({ route }: EventPageParams) {
         region={{
           latitudeDelta: 0.05,
           longitudeDelta: 0.05,
-          ...eventData.address
+          latitude: eventData.addressLatitude,
+          longitude: eventData.addressLongitude
         }}
         style={{
           backgroundColor: scheme === 'dark' ? '#262626' : '#d4d4d4',
@@ -234,9 +238,12 @@ export default function EventPage({ route }: EventPageParams) {
           marginTop: 8
         }}>
         <Marker
-          coordinate={eventData.address}
+          coordinate={{
+            latitude: eventData.addressLatitude,
+            longitude: eventData.addressLongitude
+          }}
           title={'Event Location'}
-          description={`Location of ${eventData.name}`}
+          description={`Location of ${eventData.eventName}`}
         />
       </MapView>
     </View>

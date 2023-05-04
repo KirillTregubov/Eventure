@@ -1,10 +1,15 @@
-export const FriendlyEvent = {
-  name: 'My Friendly Get-Together',
+import { User } from './DataTypes'
+import { EventType } from './Schemas'
+
+export const FriendlyEvent: EventType = {
+  eventId: '93ebd3f6-eacc-11ed-a05b-0242ac120003',
+  eventName: 'My Friendly Get-Together',
   greeting:
     'Welcome to our hang! Free food and drink for everyone. We will have a great time!',
+  eventType: 'ONLINE',
   pointsEarned: 5,
-  startDate: '10',
-  endDate: '11 August, 2022',
+  startDate: new Date('2022-08-10'),
+  endDate: new Date('2022-08-11'),
   startTime: '3:00 p.m.',
   endTime: '4:00 a.m.',
   details: [
@@ -14,18 +19,18 @@ export const FriendlyEvent = {
       content: 'You know what it means.'
     }
   ],
-  address: {
-    longitude: 43.66760016,
-    latitude: -79.4125619
-  }
+  addressLatitude: 43.792267761,
+  addressLongitude: -79.6648835
 }
 
-export const CollegeTour = {
-  name: 'College Tour',
+export const CollegeTour: EventType = {
+  eventId: 'e6cfa3d2-eacb-11ed-a05b-0242ac120003',
+  eventName: 'College Tour',
   greeting: 'Welcome to a tour of our campus!',
+  eventType: 'ONLINE',
   pointsEarned: 40,
-  startDate: '25 July, 2022',
-  endDate: '25 July, 2022',
+  startDate: new Date('2022-07-25'),
+  endDate: new Date('2022-07-25'),
   startTime: '1:00 p.m.',
   endTime: '3:00 p.m.',
   details: [
@@ -50,19 +55,19 @@ export const CollegeTour = {
       content: 'https://google.com'
     }
   ],
-  address: {
-    latitude: 37.78825,
-    longitude: -122.4324
-  }
+  addressLatitude: 37.78825,
+  addressLongitude: -122.4324
 }
 
-export const Hackathon = {
-  name: 'Toronto Hackathon',
+export const Hackathon: EventType = {
+  eventId: 'e6cfa3d2-eacb-11ed-a05b-0242ac120003',
+  eventName: 'Toronto Hackathon',
   greeting:
     'Welcome everyone to this wonderful opertunity to expand your skilset and add experince to your resumes!',
+  eventType: 'ONLINE',
   pointsEarned: 40,
-  startDate: '24',
-  endDate: '29 July, 2022',
+  startDate: new Date('2022-07-24'),
+  endDate: new Date('2022-07-29'),
   startTime: '6:00 p.m.',
   endTime: '10:0 a.m.',
   details: [
@@ -87,19 +92,19 @@ export const Hackathon = {
       content: 'https://devpost.com/'
     }
   ],
-  address: {
-    latitude: 43.642567,
-    longitude: -79.387054
-  }
+  addressLatitude: 43.792267761,
+  addressLongitude: -79.6648835
 }
 
-export const SampleEvent = {
-  name: 'Jack Morris Concert',
+export const SampleEvent: EventType = {
+  eventId: 'e6cfa3d2-eacb-11ed-a05b-0242ac120003',
+  eventName: 'Jack Morris Concert',
   greeting:
     'Welcome to the concert! The artist has a meet-and-greet after the show!',
+  eventType: 'ONLINE',
   pointsEarned: 20,
-  startDate: '25',
-  endDate: '27 July, 2022',
+  startDate: new Date('2022-07-25'),
+  endDate: new Date('2022-07-27'),
   startTime: '1:00 p.m.',
   endTime: '7:00 p.m.',
   details: [
@@ -119,19 +124,19 @@ export const SampleEvent = {
       content: 'https://google.com'
     }
   ],
-  address: {
-    latitude: 37.78825,
-    longitude: -122.4324
-  }
+  addressLatitude: 37.78825,
+  addressLongitude: -122.4324
 }
 
-export const MonthlyBarbecue = {
-  name: 'Smith Family August Barbecue',
+export const MonthlyBarbecue: EventType = {
+  eventId: 'e08d515e-eacb-11ed-a05b-0242ac120003',
+  eventName: 'Smith Family August Barbecue',
   greeting:
     'The Smith family welcomes you to our monthly barbecue. Stop by and have a burger or hot dog on us.',
+  eventType: 'ONLINE',
   pointsEarned: 10,
-  startDate: '29',
-  endDate: '29 July, 2022',
+  startDate: new Date('2022-07-27'),
+  endDate: new Date('2022-07-29'),
   startTime: '2:00 p.m.',
   endTime: '6:00 p.m.',
   details: [
@@ -147,10 +152,8 @@ export const MonthlyBarbecue = {
         'Our swimming pool will be open to all of our neightbours to use and enjoy.'
     }
   ],
-  address: {
-    latitude: 43.792267761,
-    longitude: -79.6648835
-  }
+  addressLatitude: 43.792267761,
+  addressLongitude: -79.6648835
 }
 
 export const AllEvents = [
@@ -197,7 +200,7 @@ export const smithFamilyOrganizationData = {
 }
 
 //current User
-export const UserData = {
+export const UserData: User = {
   firstName: 'John',
   lastName: 'Smith',
   username: 'johnsmith',
@@ -213,7 +216,7 @@ export const UserData = {
   rsvpEvents: [SampleEvent]
 }
 
-export const otherUserData = {
+export const otherUserData: User = {
   firstName: 'Mike',
   lastName: 'Ross',
   username: 'supercoollawyer',

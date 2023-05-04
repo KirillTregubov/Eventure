@@ -11,6 +11,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { QrCodeIcon, UserCircleIcon } from 'react-native-heroicons/outline'
 import { CalendarDaysIcon } from 'react-native-heroicons/solid'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import { NavigationParams } from './lib/Navigation'
 import Main from './pages/Events'
@@ -95,35 +96,38 @@ export default function App() {
   const scheme = useColorScheme()
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack.Navigator
-          screenOptions={{
-            headerBackTitle: 'Back'
-          }}>
-          <Stack.Screen
-            name="Platform"
-            component={PlatformPage}
-            options={{
-              headerShown: false
-            }}
-          />
-          <Stack.Screen name="Settings" component={SettingsScreen} />
-          <Stack.Screen
-            name="EventPage"
-            component={EventPage}
-            options={({ route }) => ({ title: route.params.name })}
-          />
-          <Stack.Screen
-            name="OrganizationPage"
-            component={OrganizationPage}
-            options={({ route }) => ({ title: route.params.name })}
-          />
-          <Stack.Screen name="CreateEvent" component={CreateEvent} />
-        </Stack.Navigator>
-      </NavigationContainer>
+    <SafeAreaProvider>
+      <QueryClientProvider client={queryClient}>
+        <NavigationContainer
+          theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack.Navigator
+            screenOptions={{
+              headerBackTitle: 'Back'
+            }}>
+            <Stack.Screen
+              name="Platform"
+              component={PlatformPage}
+              options={{
+                headerShown: false
+              }}
+            />
+            <Stack.Screen name="Settings" component={SettingsScreen} />
+            <Stack.Screen
+              name="EventPage"
+              component={EventPage}
+              options={({ route }) => ({ title: route.params.name })}
+            />
+            <Stack.Screen
+              name="OrganizationPage"
+              component={OrganizationPage}
+              options={({ route }) => ({ title: route.params.name })}
+            />
+            <Stack.Screen name="CreateEvent" component={CreateEvent} />
+          </Stack.Navigator>
+        </NavigationContainer>
 
-      <StatusBar style="auto" />
-    </QueryClientProvider>
+        <StatusBar style="auto" />
+      </QueryClientProvider>
+    </SafeAreaProvider>
   )
 }
