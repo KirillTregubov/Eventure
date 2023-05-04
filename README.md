@@ -11,37 +11,33 @@
   </p>
 </div>
 
-## Roles
+## Maintainers
 
-Platform/Frontend Developer: [@KirillTregubov](https://www.github.com/KirillTregubov)
+Maintained by [Kirill Tregubov](https://www.github.com/KirillTregubov) and [Soumil Dharaskar](https://www.github.com/SoumilDharaskar).
 
-Backend/Server Developers: [@SoumilDharaskar](https://www.github.com/SoumilDharaskar) [@KaranpreetRaja](https://www.github.com/KaranpreetRaja) [@whyismynamerudy](https://www.github.com/whyismynamerudy) 
+Contributors: [@KaranpreetRaja](https://www.github.com/KaranpreetRaja), [@whyismynamerudy](https://www.github.com/whyismynamerudy).
 
-<!--
-## How to use the app
-Since we cannot afford to pay our tech overlords for signing/publishing certificates, you can use our application by:
-1. Installing the [Expo Go](https://expo.dev/client) app.
-2. On Android, there is a “Scan QR Code” button. On iOS, use your System Camera. Scan the QR code below.
-    - Alternatively, you can follow the instructions on https://expo.dev/@h6team/hackthe6ix
-  <div align="center">
-    <img style='width: 30%' src="images/expo-go.svg" alt="QR Code"></img>
-  </div>
-2. Sign in to the Expo app with the following credentials.
-    ```
-    Username: 
-    Password: 
-    ``` 
-   This step is normally only required on iOS devices. However, we recommend also doing this on Android to avoid potential access errors.
--->
+## Required Software & Hardware
+1. [Node.js](https://nodejs.org/en/) version 18.16.0
+2. [Yarn Classic](https://classic.yarnpkg.com/lang/en/), which can be installed with `npm install --global yarn`.
+3. Either a physical mobile device with the [Expo Go](https://expo.dev/client) app or an emulated instance of iOS (11+) or Android (5.0+).
 
-## App Development Requirements
-### Required Software & Hardware
-1. [Node.js](https://nodejs.org/en/) version 16.17.0
-2. Either a physical mobile device with the [Expo Go](https://expo.dev/client) app or an emulated instance of iOS (11+) or Android (5.0+).
+## Setup
 
-### Running the Environment
-1. Open a shell and point your working directory at "platform/".
-2. Run "npm install --global expo-cli".
-3. Run "npm install".
-4. Run "npm run start".
-5. Follow the instructions to open a specific platform.
+Inside of `backend/`:
+1. Install dependencies with `yarn`.
+1. Create a PostgreSQL instance if you do not have one already. You can use `pgsql` [available here](https://www.postgresql.org/).
+1. Copy (`cp`) the `.env.example` file to `.env` and follow the comments to fill in all the values
+
+Inside of `platform/`:
+1. Install dependencies with `yarn`.
+1. Copy (`cp`) the `.env.example` file to `.env` and follow the comments to fill in all the values
+
+## Usage
+
+First start the backend in development mode. **Inside `backend/`**:
+1. Run `yarn dev`.
+
+Next start the Expo app in development mode. **Inside `platform/`**:
+1. Run `yarn start`.
+1. Follow the instructions to open a specific platform.
