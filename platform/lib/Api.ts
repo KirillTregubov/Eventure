@@ -84,3 +84,16 @@ export async function getEventsPageData(
     events
   }
 }
+
+export async function getSingleEventData(
+  signal: AbortController['signal'] | undefined
+) {
+  const event = await getAllEventsRequest(signal)
+
+  if (event instanceof Error) {
+    throw event
+  }
+  return {
+    event
+  }
+}
