@@ -8,6 +8,7 @@ export const Detail = z.object({
 
 export type DetailType = z.infer<typeof Detail>
 
+// TODO: shared from events/schemas.ts
 export const Event = z.object({
   eventId: z.string().uuid(),
   eventName: z.string(),
@@ -22,9 +23,16 @@ export const Event = z.object({
   endTime: z.string().datetime(),
   addressLatitude: z.number(),
   addressLongitude: z.number(),
-  details: z.array(Detail).optional() // TODO: handle incomplete events, I suggest having Event and EventPreview (for home page)
+  details: z.array(Detail) // TODO: handle incomplete events, I suggest having Event and EventPreview (for home page)
 })
 
 export type EventType = z.infer<typeof Event>
 
-export const Events = z.array(Event)
+// TODO: shared from events/schemas.ts
+const SimpleEvent = Event.pick({
+  eventId: true,
+  eventName: true,
+  startDate: true,
+  endDate: true
+})
+export const Events = z.array(SimpleEvent)

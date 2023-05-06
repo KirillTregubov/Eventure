@@ -9,7 +9,7 @@ import {
   View,
   ActivityIndicator
 } from 'react-native'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 // import { ChevronRightIcon } from 'react-native-heroicons/outline'
 
 import { NavigationParams } from '../lib/Navigation'

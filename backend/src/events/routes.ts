@@ -50,6 +50,7 @@ export default function (
             ...$ref('GetEventResponse'),
             description: 'One event'
           },
+          404: { ...$sharedRef('NotFound'), description: 'Not Found' },
           500: {
             ...$sharedRef('InternalServerError'),
             description: 'Internal Server Error'

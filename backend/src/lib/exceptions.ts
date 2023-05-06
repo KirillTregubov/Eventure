@@ -13,3 +13,9 @@ export class UniqueConstraintException extends HttpException {
     super(400, message)
   }
 }
+
+export class NotFoundException extends HttpException {
+  constructor(public readonly message: string) {
+    super(404, message)
+  }
+}

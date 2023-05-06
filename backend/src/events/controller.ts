@@ -1,5 +1,5 @@
 import { Prisma, PrismaClient } from '@prisma/client'
-import { UniqueConstraintException } from 'lib/exceptions'
+import { NotFoundException, UniqueConstraintException } from 'lib/exceptions'
 import { CreateEventBody } from './schemas'
 
 export const getEvents = async (prisma: PrismaClient) => {
@@ -11,8 +11,14 @@ export const getEventById = async (prisma: PrismaClient, eventId: string) => {
   const event = await prisma.event.findUnique({
     where: {
       eventId: eventId
+    },
+    include: {
+      details: true
     }
   })
+  if (!event) {
+    throw new NotFoundException('Event does not exist')
+  }
   return event
 }
 

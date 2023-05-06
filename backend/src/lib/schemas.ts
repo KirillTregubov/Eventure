@@ -13,7 +13,13 @@ const InternalServerError = z.object({
   message: z.string()
 })
 
+const NotFound = z.object({
+  statusCode: z.literal(404),
+  error: z.literal('Not Found'),
+  message: z.string()
+})
+
 export const { schemas: sharedSchemas, $ref: $sharedRef } = buildJsonSchemas(
-  { BadRequest, InternalServerError },
+  { BadRequest, InternalServerError, NotFound },
   { $id: 'Shared' }
 )

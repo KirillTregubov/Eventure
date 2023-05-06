@@ -1,26 +1,25 @@
 import { useState } from 'react'
 import {
   ActivityIndicator,
-  Button,
-  Linking,
+  //   Button,
+  //   Linking,
   Text,
   useColorScheme,
   View
 } from 'react-native'
 import { CalendarIcon, ClockIcon } from 'react-native-heroicons/outline'
 import MapView, { Marker } from 'react-native-maps'
-import {
-  AllEvents,
-  CollegeTour,
-  FriendlyEvent,
-  Hackathon,
-  MonthlyBarbecue,
-  SampleEvent
-} from '../lib/Data'
+// import {
+//   //   AllEvents,
+//   //   CollegeTour,
+//   //   FriendlyEvent,
+//   //   Hackathon,
+//   //   MonthlyBarbecue,
+//   SampleEvent
+// } from '../lib/Data'
 import Styles from '../lib/Styles'
-import { DetailType } from '../lib/Schemas'
 import { formatDateRange } from '../lib/Utils'
-import { getSingleEventData } from '../lib/Api'
+import { getSingleEventRequest } from '../lib/Api'
 import { useQuery } from '@tanstack/react-query'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler'
@@ -28,18 +27,20 @@ import { RefreshControl, ScrollView } from 'react-native-gesture-handler'
 type EventPageParams = {
   route: {
     params: {
-      name: string
+      id: string
     }
   }
 }
 
-export default function EventPage({ id }: string) {
+export default function EventPage({ route }: EventPageParams) {
   const scheme = useColorScheme()
+
+  const id = route.params.id
 
   const [refreshing, setRefreshing] = useState(false)
   const query = useQuery({
     queryKey: ['event-page'],
-    queryFn: ({ signal }) => getSingleEventData(signal),
+    queryFn: ({ signal }) => getSingleEventRequest(signal, id),
     retry: false
   })
   const { refetch } = query
@@ -50,15 +51,14 @@ export default function EventPage({ id }: string) {
     setRefreshing(false)
   }
 
-  let eventData = null
-
-  const goal = route.params.name
-  console.log(goal)
-  if (goal === 'Jack Morris Concert') eventData = SampleEvent
-  else if (goal === 'My Friendly Get-Together') eventData = FriendlyEvent
-  else if (goal === 'College Tour') eventData = CollegeTour
-  else if (goal === 'Toronto Hackathon') eventData = Hackathon
-  else if (goal === 'Smith Family August Barbecue') eventData = MonthlyBarbecue
+  //   const eventData = SampleEvent
+  //   const goal = route.params.name
+  //   console.log(goal)
+  //   if (goal === 'Jack Morris Concert') eventData = SampleEvent
+  //   else if (goal === 'My Friendly Get-Together') eventData = FriendlyEvent
+  //   else if (goal === 'College Tour') eventData = CollegeTour
+  //   else if (goal === 'Toronto Hackathon') eventData = Hackathon
+  //   else if (goal === 'Smith Family August Barbecue') eventData = MonthlyBarbecue
 
   // const eventData = {
   //   name: 'My Awesome Event',
@@ -162,13 +162,15 @@ export default function EventPage({ id }: string) {
           paddingBottom: 2,
           color: scheme === 'dark' ? 'white' : 'black'
         }}>
-        {query.data.event.map((eventName: string, index: number) => (<Text key={index} style={{
-          fontWeight: '700',
-          fontSize: 22,
-          paddingBottom: 2,
-          color: scheme === 'dark' ? 'white' : 'black'
-        }}>event.eventName</>))} 
-        {/* This is giving errors and obviously incorrect, will fix. Trying to understand how the query data extraction works */}
+        <Text
+          style={{
+            fontWeight: '700',
+            fontSize: 22,
+            paddingBottom: 2,
+            color: scheme === 'dark' ? 'white' : 'black'
+          }}>
+          {query.data.eventName}
+        </Text>
       </Text>
       <View
         style={{
@@ -201,7 +203,7 @@ export default function EventPage({ id }: string) {
                   ? Styles.colors.neutral['400']
                   : Styles.colors.neutral['500']
             }}>
-            {formatDateRange(query.data.event. .startDate, eventData.endDate)}
+            {formatDateRange(query.data.startDate, query.data.endDate)}
           </Text>
         </View>
         <View
@@ -227,7 +229,8 @@ export default function EventPage({ id }: string) {
                   ? Styles.colors.neutral['400']
                   : Styles.colors.neutral['500']
             }}>
-            {eventData.startTime} - {eventData.endTime}
+            {/* TODO: format */}
+            {query.data.startTime} - {query.data.endTime}
           </Text>
         </View>
       </View>
@@ -251,12 +254,12 @@ export default function EventPage({ id }: string) {
                 ? Styles.colors.neutral['300']
                 : Styles.colors.neutral['600']
           }}>
-          {eventData.pointsEarned}
+          {query.data.pointsEarned || 0}
         </Text>{' '}
         points earned
       </Text>
       <Text style={{ color: scheme === 'dark' ? 'white' : 'black' }}>
-        {eventData.greeting}
+        {query.data.greeting}
       </Text>
       <Text
         style={{
@@ -266,7 +269,8 @@ export default function EventPage({ id }: string) {
         Info provided by event
       </Text>
       {/* TODO: add Expanded EventType with details */}
-      {eventData.details.map((detail: DetailType, index: number) => {
+      {/* TODO: details completely broken */}
+      {/* {eventData.details.map((detail: DetailType, index: number) => {
         return (
           <View key={index}>
             {detail.type === 'text' && (
@@ -299,7 +303,7 @@ export default function EventPage({ id }: string) {
             )}
           </View>
         )
-      })}
+      })} */}
       <Text
         style={{
           paddingTop: 12,
@@ -307,12 +311,13 @@ export default function EventPage({ id }: string) {
         }}>
         Map of Venue
       </Text>
+      {/* TODO: delay render because it causes error */}
       <MapView
         region={{
           latitudeDelta: 0.05,
           longitudeDelta: 0.05,
-          latitude: eventData.addressLatitude,
-          longitude: eventData.addressLongitude
+          latitude: query.data.addressLatitude,
+          longitude: query.data.addressLongitude
         }}
         style={{
           backgroundColor: scheme === 'dark' ? '#262626' : '#d4d4d4',
@@ -323,11 +328,11 @@ export default function EventPage({ id }: string) {
         }}>
         <Marker
           coordinate={{
-            latitude: eventData.addressLatitude,
-            longitude: eventData.addressLongitude
+            latitude: query.data.addressLatitude,
+            longitude: query.data.addressLongitude
           }}
           title={'Event Location'}
-          description={`Location of ${eventData.eventName}`}
+          description={`Location of ${query.data.eventName}`}
         />
       </MapView>
     </View>
