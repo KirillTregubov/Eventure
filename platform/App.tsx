@@ -112,11 +112,7 @@ export default function App() {
               }}
             />
             <Stack.Screen name="Settings" component={SettingsScreen} />
-            <Stack.Screen
-              name="EventPage"
-              component={EventPage}
-              options={({ route }) => ({ title: route.params.name })}
-            />
+            <Stack.Screen name="EventPage" component={EventPage} />
             <Stack.Screen
               name="OrganizationPage"
               component={OrganizationPage}

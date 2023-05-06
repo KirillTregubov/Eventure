@@ -1,4 +1,5 @@
 import Constants from 'expo-constants'
+import { z } from 'zod'
 
 const API_URL = Constants?.manifest?.extra?.API_URL
 
@@ -8,13 +9,19 @@ async function GET(
   url: string,
   signal: AbortController['signal'] | undefined,
   options: RequestInit,
-  schema: z.ZodSchema
+  schema: z.ZodSchema,
+  errorMessage: string
 ) {
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), 5000)
 
-  const response = await fetch(new URL(`${API_URL}${url}`), {
+  const response = await fetch(new URL(url, API_URL), {
     ...options,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      ...options.headers
+    },
     signal: signal ? signal : controller.signal
   })
 
@@ -23,7 +30,7 @@ async function GET(
     if (response.status === 401) {
       return new Error('Forbidden access')
     }
-    return new Error('Error getting all events')
+    return new Error(errorMessage)
   }
 
   const json = await response.json()
@@ -36,79 +43,35 @@ async function GET(
   return result.data
 }
 
-export async function getAllEventsRequest(
+export async function getAllEvents(
   signal: AbortController['signal'] | undefined
 ) {
-  const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), 5000)
-
-  const response = await fetch(new URL(`${API_URL}/api/v1/events`), {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
-    },
-    signal: signal ? signal : controller.signal
-  })
-  clearTimeout(timeout)
-  if (!response.ok) {
-    if (response.status === 401) {
-      return new Error('Forbidden access')
-    }
-    return new Error('Error getting all events')
-  }
-  const json = await response.json()
-
-  const result = Events.safeParse(json)
-  if (!result.success) {
-    console.error('Zod validation error:', result.error)
-    throw Error('Data validation error')
-  }
-
-  return result.data
+  return GET(
+    '/api/v1/events',
+    signal,
+    { method: 'GET' },
+    Events,
+    'Error getting all events'
+  )
 }
 
-export async function getSingleEventRequest(
+export async function getSingleEvent(
   signal: AbortController['signal'] | undefined,
   eventId: string
 ) {
-  const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), 5000)
-
-  const response = await fetch(
-    new URL(`/api/v1/events/${eventId}`, `${API_URL}`),
-    {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      signal: signal ? signal : controller.signal
-    }
+  return GET(
+    `/api/v1/events/${eventId}`,
+    signal,
+    { method: 'GET' },
+    Event,
+    'Error getting event'
   )
-  clearTimeout(timeout)
-  if (!response.ok) {
-    if (response.status === 401) {
-      return new Error('Forbidden access')
-    }
-    console.log(response)
-    return new Error('Error getting the event')
-  }
-  const json = await response.json()
-
-  const result = Event.safeParse(json)
-  if (!result.success) {
-    console.error('Zod validation error:', result.error)
-    throw Error('Data validation error')
-  }
-
-  return result.data
 }
 
 export async function getEventsPageData(
   signal: AbortController['signal'] | undefined
 ) {
-  const events = await getAllEventsRequest(signal)
+  const events = await getAllEvents(signal)
 
   if (events instanceof Error) {
     throw events

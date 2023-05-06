@@ -73,7 +73,7 @@ export default function Scan({ navigation }: ScanProps) {
 
   const handleBarCodeScanned = ({ data: url }: { data: string }) => {
     console.log('scanned', url)
-    navigation.navigate('EventPage', { name: 'My Awesome Event' })
+    navigation.navigate('EventPage', { id: 'My Awesome Event' })
   }
 
   const onFlashToggle = useCallback(() => {

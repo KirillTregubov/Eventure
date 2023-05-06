@@ -19,10 +19,12 @@ import MapView, { Marker } from 'react-native-maps'
 // } from '../lib/Data'
 import Styles from '../lib/Styles'
 import { formatDateRange } from '../lib/Utils'
-import { getSingleEventRequest } from '../lib/Api'
+import { getSingleEvent } from '../lib/Api'
 import { useQuery } from '@tanstack/react-query'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler'
+import { StackNavigationProp } from '@react-navigation/stack'
+import { NavigationParams } from '../lib/Navigation'
 
 type EventPageParams = {
   route: {
@@ -30,9 +32,10 @@ type EventPageParams = {
       id: string
     }
   }
+  navigation: StackNavigationProp<NavigationParams, 'EventPage'>
 }
 
-export default function EventPage({ route }: EventPageParams) {
+export default function EventPage({ route, navigation }: EventPageParams) {
   const scheme = useColorScheme()
 
   const id = route.params.id
@@ -40,7 +43,11 @@ export default function EventPage({ route }: EventPageParams) {
   const [refreshing, setRefreshing] = useState(false)
   const query = useQuery({
     queryKey: ['event-page'],
-    queryFn: ({ signal }) => getSingleEventRequest(signal, id),
+    queryFn: ({ signal }) =>
+      getSingleEvent(signal, id).then((data) => {
+        navigation.setOptions({ title: data.eventName })
+        return data
+      }),
     retry: false
   })
   const { refetch } = query
