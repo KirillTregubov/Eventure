@@ -1,5 +1,12 @@
 import { useState } from 'react'
-import { Button, Linking, Text, useColorScheme, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Button,
+  Linking,
+  Text,
+  useColorScheme,
+  View
+} from 'react-native'
 import { CalendarIcon, ClockIcon } from 'react-native-heroicons/outline'
 import MapView, { Marker } from 'react-native-maps'
 import {
@@ -13,6 +20,10 @@ import {
 import Styles from '../lib/Styles'
 import { DetailType } from '../lib/Schemas'
 import { formatDateRange } from '../lib/Utils'
+import { getSingleEventData } from '../lib/Api'
+import { useQuery } from '@tanstack/react-query'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { RefreshControl, ScrollView } from 'react-native-gesture-handler'
 
 type EventPageParams = {
   route: {
@@ -22,8 +33,22 @@ type EventPageParams = {
   }
 }
 
-export default function EventPage({ route }: EventPageParams) {
+export default function EventPage({ id }: string) {
   const scheme = useColorScheme()
+
+  const [refreshing, setRefreshing] = useState(false)
+  const query = useQuery({
+    queryKey: ['event-page'],
+    queryFn: ({ signal }) => getSingleEventData(signal),
+    retry: false
+  })
+  const { refetch } = query
+
+  const onRefresh = async () => {
+    setRefreshing(true)
+    await refetch()
+    setRefreshing(false)
+  }
 
   let eventData = null
 
@@ -67,12 +92,65 @@ export default function EventPage({ route }: EventPageParams) {
   //   }
   // }
 
-  if (!eventData) {
-    return <></>
+  // if (!eventData) {
+  //   return <></>
+  // }
+
+  if (!query.isSuccess) {
+    return (
+      <SafeAreaView
+        style={{
+          flex: 1
+        }}>
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          contentInsetAdjustmentBehavior={'automatic'}
+          contentContainerStyle={{
+            paddingTop: Styles.paddingTop.container,
+            paddingHorizontal: Styles.paddingHorizontal.container
+            // flexGrow: 1
+            // minHeight: '100%'
+            //   justifyContent: 'space-between'
+          }}>
+          {/* <Text
+            style={{
+              color: scheme === 'dark' ? 'white' : 'black'
+            }}>
+            Error
+          </Text> */}
+          {query.isLoading && !refreshing ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center'
+              }}>
+              <ActivityIndicator size="small" />
+            </View>
+          ) : (
+            query.isError && (
+              <Text
+                style={{
+                  color: scheme === 'dark' ? 'white' : 'black'
+                }}>
+                Error:{' '}
+                {query.error instanceof Error
+                  ? query.error.message
+                  : 'Failed to load data'}
+              </Text>
+            )
+          )}
+        </ScrollView>
+      </SafeAreaView>
+    )
   }
 
   return (
     <View
+      // refreshControl={
+      //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      // }
       style={{
         paddingTop: Styles.paddingTop.container,
         paddingHorizontal: Styles.paddingHorizontal.container
@@ -84,7 +162,13 @@ export default function EventPage({ route }: EventPageParams) {
           paddingBottom: 2,
           color: scheme === 'dark' ? 'white' : 'black'
         }}>
-        {eventData.eventName}
+        {query.data.event.map((eventName: string, index: number) => (<Text key={index} style={{
+          fontWeight: '700',
+          fontSize: 22,
+          paddingBottom: 2,
+          color: scheme === 'dark' ? 'white' : 'black'
+        }}>event.eventName</>))} 
+        {/* This is giving errors and obviously incorrect, will fix. Trying to understand how the query data extraction works */}
       </Text>
       <View
         style={{
@@ -117,7 +201,7 @@ export default function EventPage({ route }: EventPageParams) {
                   ? Styles.colors.neutral['400']
                   : Styles.colors.neutral['500']
             }}>
-            {formatDateRange(eventData.startDate, eventData.endDate)}
+            {formatDateRange(query.data.event. .startDate, eventData.endDate)}
           </Text>
         </View>
         <View
