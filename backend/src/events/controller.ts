@@ -81,6 +81,9 @@ export const createEvent = async (
         //     content: 'This is a pop concert'
         //   }
         // }
+        
+      }, include: {
+        details: true
       }
     })
     return event

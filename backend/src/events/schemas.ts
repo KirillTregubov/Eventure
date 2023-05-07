@@ -34,10 +34,7 @@ export type GetEventParams = z.infer<typeof GetEventParams>
 
 const GetEventResponse = Event
 
-const CreateEventBody = Event.omit({ eventId: true }).extend({
-  organizationId: z.string().uuid()
-  // .default('76bda396-53bc-4c6d-a4c9-91987f006825')
-})
+const CreateEventBody = Event.omit({ eventId: true, details: true })
 export type CreateEventBody = z.infer<typeof CreateEventBody>
 
 const CreateEventResponse = Event
